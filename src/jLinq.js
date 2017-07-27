@@ -1,4 +1,4 @@
-var jLinq = (function() {	
+var jLinq = (function() {
 	return new Object({
 		createCollection: function(array) {
 			var innerArray = array;
@@ -9,6 +9,9 @@ var jLinq = (function() {
 				},
 				toArray: function() {
 					return innerArray;
+				},
+				all: function(predicate) {
+
 				},
 				select: function(selector) {
 					if(!selector) {

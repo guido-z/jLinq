@@ -2,6 +2,10 @@ var assert = chai.assert;
 var expect = chai.expect;
 var should = chai.should();
 
+describe('all tests', function() {
+
+});
+
 describe('select tests', function() {
     it('Missing, null, or undefined selector raises an exception', function() {
         var arr = l([1, 2, 3]);
@@ -37,6 +41,25 @@ describe('select tests', function() {
         var result = arr.select(x => x.length).toArray();
 
         expect(result).to.deep.equal([4, 7, 6, 6]);
+    });
+
+    it('Getting data from objects', function() {
+        var arr = l([
+            {
+                firstName: 'John',
+                lastName: 'Smith',
+                age: 32
+            },
+            {
+                firstName: 'George',
+                lastName: 'Mason',
+                age: 51
+            }
+        ]);
+
+        var result = arr.select(x => x.firstName + ' ' + x.lastName).toArray();
+
+        expect(result).to.deep.equal(['John Smith', 'George Mason']);
     });
 
     it('Chained select calls', function() {
