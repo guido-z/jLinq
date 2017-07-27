@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link data-require="mocha@*" data-semver="1.13.0" rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/mocha/1.13.0/mocha.css" />
+        <script data-require="mocha@*" data-semver="1.13.0" src="http://cdnjs.cloudflare.com/ajax/libs/mocha/1.13.0/mocha.js"></script>
+        <script data-require="expect@*" data-semver="1.13.4" src="https://npmcdn.com/expect/umd/expect.min.js"></script>
+        <script data-require="chaijs" data-semver="1.10.0" src="http://cdnjs.cloudflare.com/ajax/libs/chai/1.10.0/chai.min.js"></script>
+        <script src="src/jLinq.js"></script>
+    </head>
+    <body>
+        <div id="mocha">
+        </div>
+        <script>
+            console.clear();
+            mocha.setup('bdd');
+        </script>
+        <script src="test/tests.js"></script>
+        <script>
+            mocha.run();
+        </script>
+    </body>
+</html>
