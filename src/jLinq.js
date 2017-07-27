@@ -7,12 +7,25 @@ var jLinq = (function() {
 				toString: function() {
 					return innerArray.join();
 				},
+
 				toArray: function() {
 					return innerArray;
 				},
-				all: function(predicate) {
 
+				all: function(predicate) {
+					if(!predicate) {
+						throw new Error('Invalid predicate.');
+					}
+
+					var result = true;
+
+					for(var i in innerArray) {
+						result &= predicate(innerArray[i]);
+					}
+
+					return result;
 				},
+
 				select: function(selector) {
 					if(!selector) {
 						throw new Error('Invalid selector.');

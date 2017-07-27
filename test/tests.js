@@ -3,7 +3,79 @@ var expect = chai.expect;
 var should = chai.should();
 
 describe('all tests', function() {
+    it('Missing, null, or undefined predicate raises an exception', function() {
+        var arr = l([1, 2, 3]);
 
+        expect(() => arr.all()).to.throw('Invalid predicate.');
+        expect(() => arr.all(null)).to.throw('Invalid predicate.');
+        expect(() => arr.all(undefined)).to.throw('Invalid predicate.');
+    });
+
+    it('Search for true in an array of true values returns true', function() {
+        var arr = l([true, true, true]);
+        var result = arr.all(x => x === true);
+
+        expect(result).to.equal(1);
+    });
+
+    it('Search for true in an array of mixed boolean values returns false', function() {
+        var arr = l([false, true, false]);
+        var result = arr.all(x => x === true);
+
+        expect(result).to.equal(0);
+    });
+
+    it('Search for true in an array of false values returns false', function() {
+        var arr = l([false, false, false]);
+        var result = arr.all(x => x === true);
+
+        expect(result).to.equal(0);
+    });
+
+    it('Determine if all numbers are even in an array filled with even numbers returns true', function() {
+        var arr = l([2, 4, 6, 8]);
+        var result = arr.all(x => x % 2 == 0);
+
+        expect(result).to.equal(1);
+    });
+
+    it('Determine if all numbers are even in an array with both odd and even numbers returns false', function() {
+        var arr = l([1, 2, 3, 4, 5, 6]);
+        var result = arr.all(x => x % 2 == 0);
+
+        expect(result).to.equal(0);
+    });
+
+    it('Determine if all numbers are even in an array filled with odd numbers returns false', function() {
+        var arr = l([1, 3, 5, 7, 9]);
+        var result = arr.all(x => x % 2 == 0);
+
+        expect(result).to.equal(0);
+    });
+
+    it('Determine if all people in an object array are teenagers', function() {
+        var arr = l([
+            {
+                firstName: 'Oliver',
+                lastName: 'Queen',
+                age: 15
+            },
+            {
+                firstName: 'Bruce',
+                lastName: 'Wayne',
+                age: 19
+            },
+            {
+                firstName: 'Clark',
+                lastName: 'Kent',
+                age: 18
+            }
+        ]);
+
+        var result = arr.all(x => x.age >= 13 && x.age <= 19);
+
+        expect(result).to.equal(1);
+    });
 });
 
 describe('select tests', function() {
@@ -46,20 +118,20 @@ describe('select tests', function() {
     it('Getting data from objects', function() {
         var arr = l([
             {
-                firstName: 'John',
-                lastName: 'Smith',
+                firstName: 'Bruce',
+                lastName: 'Wayne',
                 age: 32
             },
             {
-                firstName: 'George',
-                lastName: 'Mason',
+                firstName: 'Clark',
+                lastName: 'Kent',
                 age: 51
             }
         ]);
 
         var result = arr.select(x => x.firstName + ' ' + x.lastName).toArray();
 
-        expect(result).to.deep.equal(['John Smith', 'George Mason']);
+        expect(result).to.deep.equal(['Bruce Wayne', 'Clark Kent']);
     });
 
     it('Chained select calls', function() {
@@ -76,4 +148,8 @@ describe('select tests', function() {
 
         expect(resultA).to.deep.equal(resultB);
     });
+});
+
+describe('Integration tests', function () {
+
 });
