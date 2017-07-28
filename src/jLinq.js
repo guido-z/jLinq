@@ -17,13 +17,27 @@ var jLinq = (function() {
 						throw new Error('Invalid predicate.');
 					}
 
-					var result = true;
-
 					for(var i in innerArray) {
-						result &= predicate(innerArray[i]);
+						if(predicate(innerArray[i]) === false) {
+							return false;
+						}
 					}
 
-					return result;
+					return true;
+				},
+
+				any:function(predicate) {
+					if(!predicate) {
+						return innerArray.length > 0;
+					}
+					
+					for(var i in innerArray) {
+						if(predicate(innerArray[i]) === true) {
+							return true;
+						}
+					}
+
+					return false;
 				},
 
 				select: function(selector) {

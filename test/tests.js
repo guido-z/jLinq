@@ -15,42 +15,42 @@ describe('all tests', function() {
         var arr = l([true, true, true]);
         var result = arr.all(x => x === true);
 
-        expect(result).to.equal(1);
+        expect(result).to.equal(true);
     });
 
     it('Search for true in an array of mixed boolean values returns false', function() {
         var arr = l([false, true, false]);
         var result = arr.all(x => x === true);
 
-        expect(result).to.equal(0);
+        expect(result).to.equal(false);
     });
 
     it('Search for true in an array of false values returns false', function() {
         var arr = l([false, false, false]);
         var result = arr.all(x => x === true);
 
-        expect(result).to.equal(0);
+        expect(result).to.equal(false);
     });
 
     it('Determine if all numbers are even in an array filled with even numbers returns true', function() {
         var arr = l([2, 4, 6, 8]);
         var result = arr.all(x => x % 2 == 0);
 
-        expect(result).to.equal(1);
+        expect(result).to.equal(true);
     });
 
     it('Determine if all numbers are even in an array with both odd and even numbers returns false', function() {
         var arr = l([1, 2, 3, 4, 5, 6]);
         var result = arr.all(x => x % 2 == 0);
 
-        expect(result).to.equal(0);
+        expect(result).to.equal(false);
     });
 
     it('Determine if all numbers are even in an array filled with odd numbers returns false', function() {
         var arr = l([1, 3, 5, 7, 9]);
         var result = arr.all(x => x % 2 == 0);
 
-        expect(result).to.equal(0);
+        expect(result).to.equal(false);
     });
 
     it('Determine if all people in an object array are teenagers', function() {
@@ -74,7 +74,64 @@ describe('all tests', function() {
 
         var result = arr.all(x => x.age >= 13 && x.age <= 19);
 
-        expect(result).to.equal(1);
+        expect(result).to.equal(true);
+    });
+});
+
+describe('any tests', function() {
+    describe('Parameterless overload', function() {
+        it('Applying any on empty array returns false', function() {
+            var arr = l(new Array());
+            expect(arr.any()).to.equal(false);
+        });
+
+        it('Applying any on a non empty array returns true', function() {
+            var arr = l([1, 2, 3]);
+            expect(arr.any()).to.equal(true);
+        });
+
+        it('Applying any on an array with only one element returns true', function() {
+            var arr = l([0]);
+            expect(arr.any()).to.equal(true);
+        });
+
+        it('Applying any on an array with empty objects returns true', function() {
+            var arr = l([{}, {}]);
+            expect(arr.any()).to.equal(true);
+        });
+    });
+
+    describe('Predicate overload', function() {
+        it('Applying any to search for even numbers in an array filled with even numbers returns true', function() {
+            var arr = l([2, 4, 6, 8, 10]);
+            expect(arr.any(x => x % 2 == 0)).to.equal(true);
+        });
+
+        it('Applying any to search for even numbers in an array with al least one even number returns true', function() {
+            var arr = l([1, 2, 3, 4, 5]);
+            expect(arr.any(x => x % 2 == 0)).to.equal(true);
+        });
+
+        it('Applying any to search for even numbers in an array filled with odd numbers returns false', function() {
+            var arr = l([1, 3, 5, 7, 9]);
+            expect(arr.any(x => x % 2 == 0)).to.equal(false);
+        });
+
+        it('Search people by name', function() {
+            var arr = l([
+                {
+                    firstName: 'Bruce',
+                    lastName: 'Wayne'
+                },
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                }
+            ]);
+
+            expect(arr.any(x => x.firstName == 'Clark')).to.equal(true);
+            expect(arr.any(x => x.firstName == 'Oliver')).to.equal(false);
+        });
     });
 });
 
