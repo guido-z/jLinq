@@ -4,14 +4,29 @@ var jLinq = (function() {
 			var innerArray = array;
 
 			return new Object({
+				/*
+				 * For testing purposes, delete later.
+				 */	
 				toString: function() {
 					return innerArray.join();
 				},
 
+				/*
+				 * Returns the underlying array.
+				 * 
+				 *  @return {Object} innerArray
+				 */ 				 
 				toArray: function() {
 					return innerArray;
 				},
 
+				/*
+				 * Determines whether all elements of a sequence satisfy a
+				 * condition.
+				 * 
+				 * @param {function} predicate
+				 * @return {Bool} all
+				 */ 
 				all: function(predicate) {
 					if(!predicate) {
 						throw new Error('Invalid predicate.');
@@ -26,7 +41,15 @@ var jLinq = (function() {
 					return true;
 				},
 
-				any:function(predicate) {
+				/*
+				 * Determines whether any element of a sequence satisfies a
+				 * condition. If no predicate is provided, then it returns
+				 * whether the sequence contains any elements.
+				 * 
+				 * @param {function} predicate
+				 * @return {Bool} any
+				 */
+				any: function(predicate) {
 					if(!predicate) {
 						return innerArray.length > 0;
 					}
@@ -40,18 +63,19 @@ var jLinq = (function() {
 					return false;
 				},
 
+				/*
+				 * Projects each element of a sequence into a new form.
+				 * 
+				 * @param {function} selector
+				 * @return {Object} select
+				 */
 				select: function(selector) {
 					if(!selector) {
 						throw new Error('Invalid selector.');
 					}
-
-					var result = new Array();
-
-					for(var i in innerArray) {
-						result.push(selector(innerArray[i], i));
-                    }
-
-					return l(result);
+					
+					var result = innerArray.map((x, i) => selector(x, i));
+					return l(result);			
 				},
             });
         }

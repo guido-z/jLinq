@@ -155,7 +155,7 @@ describe('select tests', function() {
         var arr = l([1, 2, 3]);
         var result = arr.select((x, i) => i).toArray();
 
-        expect(result).to.deep.equal(['0', '1', '2']);
+        expect(result).to.deep.equal([0, 1, 2]);
     });
 
     it('Apply an operation inside the selector', function() {
