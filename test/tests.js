@@ -188,6 +188,37 @@ describe('average tests', function() {
     });    
 });
 
+describe('concat tests', function() {
+    it('Invalid second array causes de funcion to throw an exception', function() {
+        var arr = l([1, 2, 3]);
+        
+        expect(() => arr.concat(null)).to.throw('Invalid collection.');
+        expect(() => arr.concat(1)).to.throw('Invalid collection.');
+        expect(() => arr.concat('a')).to.throw('Invalid collection.');
+        expect(() => arr.concat({})).to.throw('Invalid collection.');
+    });
+
+    it('Concatenating two empty arrays returns an empty array', function() {
+        var arr = l([]);
+        expect(arr.concat([]).toArray()).to.deep.equal([]);
+    });
+
+    it('Concatenating an empty array to a non empty array returns a new array with the elements of the first one', function() {
+        var arr = l([1, 2, 3]);
+        expect(arr.concat([]).toArray()).to.deep.equal([1, 2, 3]);
+    });
+
+    it('Concatenating a non empty array to an empty array returns a new array with the elements of the second one', function() {
+        var arr = l([]);
+        expect(arr.concat([1, 2, 3]).toArray()).to.deep.equal([1, 2, 3]);
+    });
+
+    it('Concatenating two non empty array returns a new array with the elements of the first followed by the elements of the second', function() {
+        var arr = l([1, 2, 3]);
+        expect(arr.concat([4, 5, 6]).toArray()).to.deep.equal([1, 2, 3, 4, 5, 6]);
+    });
+});
+
 describe('select tests', function() {
     it('Missing, null, or undefined selector raises an exception', function() {
         var arr = l([1, 2, 3]);

@@ -100,6 +100,18 @@ var jLinq = (function() {
 				},
 
 				/*
+				 * Concatenates two sequences. 'second' must be a valid
+				 * array.
+				 * 
+				 * @param {object Array} second				 
+				 * @return {object Array
+				 */				
+				concat: function(second) {
+					validateArray(second);
+					return l(innerArray.concat(second));
+				},
+
+				/*
 				 * Projects each element of a sequence into a new form.
 				 * 
 				 * @param {function} selector
