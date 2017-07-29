@@ -1,6 +1,20 @@
 var jLinq = (function() {
-	return new Object({
+
+	/*
+	 * Checks whether 'array' is a valid array.
+	 * 
+	 * @param {object Array} array
+	 */
+	var validateArray = function(array) {
+		if(Object.prototype.toString.call(array) != '[object Array]') {
+			throw new Error('Invalid collection.');
+		}
+	};
+
+	return new Object({		
 		createCollection: function(array) {
+			validateArray(array);
+
 			var innerArray = array;
 
 			return new Object({
@@ -61,6 +75,28 @@ var jLinq = (function() {
 					}
 
 					return false;
+				},
+
+				/*
+				 * Computes the average of a sequence of numeric values that
+				 * are obtained by invoking a transform function on each
+				 * element of the input sequence.
+				 * 
+				 * @param {function} selector
+				 * @return {number} average
+				 */
+				average: function(selector) {
+					if(!selector) {
+						throw new Error('Invalid selector.');
+					}
+					
+					var sum = 0;
+
+					for(let item of innerArray) {
+						sum += selector(item);
+					}
+
+					return sum / innerArray.length;
 				},
 
 				/*

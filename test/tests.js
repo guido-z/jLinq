@@ -2,6 +2,14 @@ var assert = chai.assert;
 var expect = chai.expect;
 var should = chai.should();
 
+describe('Object creation tests', function() {
+    it('Creating object from invalid array throws an exception', function() {
+        expect(() => l(1)).to.throw('Invalid collection.');
+        expect(() => l('word')).to.throw('Invalid collection.');
+        expect(() => l({})).to.throw('Invalid collection.');
+    });
+});
+
 describe('all tests', function() {
     it('Missing, null, or undefined predicate raises an exception', function() {
         var arr = l([1, 2, 3]);
@@ -135,11 +143,56 @@ describe('any tests', function() {
     });
 });
 
+describe('average tests', function() {
+    it('Missing, null, or undefined selector raises an exception', function() {
+        var arr = l([1, 2, 3, 4]);
+        expect(arr.average).to.throw('Invalid selector.');
+    });
+
+    it('Calculate the average of integers', function() {
+        var arr = l([1, 2, 3, 4]);
+        expect(arr.average(x => x)).to.equal(2.5);
+    });
+
+    it('Calculate the average of the lengths of arrays', function() {
+        var arr = l([
+            [1],
+            [2, 3],
+            [4, 5, 6],
+            [7, 8, 9, 10]
+        ]);
+
+        expect(arr.average(x => x.length)).to.equal(2.5);
+    });
+
+    it('Calculate the average age of people', function() {
+        var arr = l([
+            {
+                firstName: 'Oliver',
+                lastName: 'Queen',
+                age: 15
+            },
+            {
+                firstName: 'Bruce',
+                lastName: 'Wayne',
+                age: 17
+            },
+            {
+                firstName: 'Clark',
+                lastName: 'Kent',
+                age: 16
+            }
+        ]);
+
+        expect(arr.average(x => x.age)).to.equal(16);
+    });    
+});
+
 describe('select tests', function() {
     it('Missing, null, or undefined selector raises an exception', function() {
         var arr = l([1, 2, 3]);
 
-        expect(() => arr.select()).to.throw('Invalid selector.');
+        expect(arr.select).to.throw('Invalid selector.');
         expect(() => arr.select(null)).to.throw('Invalid selector.');
         expect(() => arr.select(undefined)).to.throw('Invalid selector.');
     });
