@@ -2,17 +2,9 @@ var assert = chai.assert;
 var expect = chai.expect;
 var should = chai.should();
 
-describe('Object creation tests', function() {
-    it('Creating object from invalid array throws an exception', function() {
-        expect(() => l(1)).to.throw('Invalid collection.');
-        expect(() => l('word')).to.throw('Invalid collection.');
-        expect(() => l({})).to.throw('Invalid collection.');
-    });
-});
-
 describe('all tests', function() {
     it('Missing, null, or undefined predicate raises an exception', function() {
-        var arr = l([1, 2, 3]);
+        var arr = [1, 2, 3];
 
         expect(() => arr.all()).to.throw('Invalid predicate.');
         expect(() => arr.all(null)).to.throw('Invalid predicate.');
@@ -20,49 +12,49 @@ describe('all tests', function() {
     });
 
     it('Search for true in an array of true values returns true', function() {
-        var arr = l([true, true, true]);
+        var arr = [true, true, true];
         var result = arr.all(x => x === true);
 
         expect(result).to.equal(true);
     });
 
     it('Search for true in an array of mixed boolean values returns false', function() {
-        var arr = l([false, true, false]);
+        var arr = [false, true, false];
         var result = arr.all(x => x === true);
 
         expect(result).to.equal(false);
     });
 
     it('Search for true in an array of false values returns false', function() {
-        var arr = l([false, false, false]);
+        var arr = [false, false, false];
         var result = arr.all(x => x === true);
 
         expect(result).to.equal(false);
     });
 
     it('Determine if all numbers are even in an array filled with even numbers returns true', function() {
-        var arr = l([2, 4, 6, 8]);
+        var arr = [2, 4, 6, 8];
         var result = arr.all(x => x % 2 == 0);
 
         expect(result).to.equal(true);
     });
 
     it('Determine if all numbers are even in an array with both odd and even numbers returns false', function() {
-        var arr = l([1, 2, 3, 4, 5, 6]);
+        var arr = [1, 2, 3, 4, 5, 6];
         var result = arr.all(x => x % 2 == 0);
 
         expect(result).to.equal(false);
     });
 
     it('Determine if all numbers are even in an array filled with odd numbers returns false', function() {
-        var arr = l([1, 3, 5, 7, 9]);
+        var arr = [1, 3, 5, 7, 9];
         var result = arr.all(x => x % 2 == 0);
 
         expect(result).to.equal(false);
     });
 
     it('Determine if all people in an object array are teenagers', function() {
-        var arr = l([
+        var arr = [
             {
                 firstName: 'Oliver',
                 lastName: 'Queen',
@@ -78,7 +70,7 @@ describe('all tests', function() {
                 lastName: 'Kent',
                 age: 18
             }
-        ]);
+        ];
 
         var result = arr.all(x => x.age >= 13 && x.age <= 19);
 
@@ -89,44 +81,44 @@ describe('all tests', function() {
 describe('any tests', function() {
     describe('Parameterless overload', function() {
         it('Applying any on empty array returns false', function() {
-            var arr = l(new Array());
+            var arr = new Array();
             expect(arr.any()).to.equal(false);
         });
 
         it('Applying any on a non empty array returns true', function() {
-            var arr = l([1, 2, 3]);
+            var arr = [1, 2, 3];
             expect(arr.any()).to.equal(true);
         });
 
         it('Applying any on an array with only one element returns true', function() {
-            var arr = l([0]);
+            var arr = [0];
             expect(arr.any()).to.equal(true);
         });
 
         it('Applying any on an array with empty objects returns true', function() {
-            var arr = l([{}, {}]);
+            var arr = [{}, {}];
             expect(arr.any()).to.equal(true);
         });
     });
 
     describe('Predicate overload', function() {
         it('Applying any to search for even numbers in an array filled with even numbers returns true', function() {
-            var arr = l([2, 4, 6, 8, 10]);
+            var arr = [2, 4, 6, 8, 10];
             expect(arr.any(x => x % 2 == 0)).to.equal(true);
         });
 
         it('Applying any to search for even numbers in an array with al least one even number returns true', function() {
-            var arr = l([1, 2, 3, 4, 5]);
+            var arr = [1, 2, 3, 4, 5];
             expect(arr.any(x => x % 2 == 0)).to.equal(true);
         });
 
         it('Applying any to search for even numbers in an array filled with odd numbers returns false', function() {
-            var arr = l([1, 3, 5, 7, 9]);
+            var arr = [1, 3, 5, 7, 9];
             expect(arr.any(x => x % 2 == 0)).to.equal(false);
         });
 
         it('Search people by name', function() {
-            var arr = l([
+            var arr = [
                 {
                     firstName: 'Bruce',
                     lastName: 'Wayne'
@@ -135,7 +127,7 @@ describe('any tests', function() {
                     firstName: 'Clark',
                     lastName: 'Kent'
                 }
-            ]);
+            ];
 
             expect(arr.any(x => x.firstName == 'Clark')).to.equal(true);
             expect(arr.any(x => x.firstName == 'Oliver')).to.equal(false);
@@ -145,28 +137,28 @@ describe('any tests', function() {
 
 describe('average tests', function() {
     it('Missing, null, or undefined selector raises an exception', function() {
-        var arr = l([1, 2, 3, 4]);
+        var arr = [1, 2, 3, 4];
         expect(arr.average).to.throw('Invalid selector.');
     });
 
     it('Calculate the average of integers', function() {
-        var arr = l([1, 2, 3, 4]);
+        var arr = [1, 2, 3, 4];
         expect(arr.average(x => x)).to.equal(2.5);
     });
 
     it('Calculate the average of the lengths of arrays', function() {
-        var arr = l([
+        var arr = [
             [1],
             [2, 3],
             [4, 5, 6],
             [7, 8, 9, 10]
-        ]);
+        ];
 
         expect(arr.average(x => x.length)).to.equal(2.5);
     });
 
     it('Calculate the average age of people', function() {
-        var arr = l([
+        var arr = [
             {
                 firstName: 'Oliver',
                 lastName: 'Queen',
@@ -182,47 +174,16 @@ describe('average tests', function() {
                 lastName: 'Kent',
                 age: 16
             }
-        ]);
+        ];
 
         expect(arr.average(x => x.age)).to.equal(16);
     });    
 });
 
-describe('concat tests', function() {
-    it('Invalid second array causes de funcion to throw an exception', function() {
-        var arr = l([1, 2, 3]);
-        
-        expect(() => arr.concat(null)).to.throw('Invalid collection.');
-        expect(() => arr.concat(1)).to.throw('Invalid collection.');
-        expect(() => arr.concat('a')).to.throw('Invalid collection.');
-        expect(() => arr.concat({})).to.throw('Invalid collection.');
-    });
-
-    it('Concatenating two empty arrays returns an empty array', function() {
-        var arr = l([]);
-        expect(arr.concat([]).toArray()).to.deep.equal([]);
-    });
-
-    it('Concatenating an empty array to a non empty array returns a new array with the elements of the first one', function() {
-        var arr = l([1, 2, 3]);
-        expect(arr.concat([]).toArray()).to.deep.equal([1, 2, 3]);
-    });
-
-    it('Concatenating a non empty array to an empty array returns a new array with the elements of the second one', function() {
-        var arr = l([]);
-        expect(arr.concat([1, 2, 3]).toArray()).to.deep.equal([1, 2, 3]);
-    });
-
-    it('Concatenating two non empty array returns a new array with the elements of the first followed by the elements of the second', function() {
-        var arr = l([1, 2, 3]);
-        expect(arr.concat([4, 5, 6]).toArray()).to.deep.equal([1, 2, 3, 4, 5, 6]);
-    });
-});
-
 describe('contains tests', function() {
     describe('General tests', function() {
         it('Missing or undefined value raises an exception', function() {
-            var arr = l([1, 2 ,3]);
+            var arr = [1, 2 ,3];
 
             expect(arr.contains).to.throw('Expected a value.');
             expect(() => arr.contains(undefined)).to.throw('Expected a value.');
@@ -231,7 +192,7 @@ describe('contains tests', function() {
 
     describe('Default comparer tests', function() {
         it('Applying contains on an empty collection always returns false', function() {
-            var arr = l([]);
+            var arr = [];
 
             expect(arr.contains(null)).to.equal(false);            
             expect(arr.contains(1)).to.equal(false);
@@ -241,23 +202,23 @@ describe('contains tests', function() {
         });
 
         it('If the passed value is the same as the only item in the array, contains returns true', function() {
-            var arr = l([1]);
+            var arr = [1];
             expect(arr.contains(1)).to.equal(true);
         });
 
         it('If the passed value exists in the collection, contains returns true', function() {
-            var arr = l([1, 2]);
+            var arr = [1, 2];
             expect(arr.contains(1)).to.equal(true);
             expect(arr.contains(2)).to.equal(true);
         });
 
         it('If the passed value doesn\'t exist in a non empty collection, contains returns false', function() {
-            var arr = l([1, 2, 4]);
+            var arr = [1, 2, 4];
             expect(arr.contains(3)).to.equal(false);
         });
 
         it('Searching for objects always returns false', function() {
-            var arr = l([
+            var arr = [
                 {
                     firstName: 'Clark',
                     lastName: 'Kent'
@@ -266,7 +227,7 @@ describe('contains tests', function() {
                     firstName: 'Clark',
                     lastName: 'Kent'
                 }
-            ]);
+            ];
 
             var obj = {
                 firstName: 'Clark',
@@ -277,10 +238,10 @@ describe('contains tests', function() {
         });
 
         it('Searching for arrays always returns false', function() {
-            var arr = l([
+            var arr = [
                 [1, 2, 3],
                 [4, 5, 6]
-            ]);
+            ];
 
             var value = [1, 2, 3];
 
@@ -290,7 +251,7 @@ describe('contains tests', function() {
 
     describe('Custom comparer tests', function() {
         it('If comparer is not a function, contains throws an exception', function() {
-            var arr = l([1, 2, 3]);
+            var arr = [1, 2, 3];
 
             expect(() => arr.contains(2, null)).to.throw('Invalid comparer.');            
             expect(() => arr.contains(2, 1)).to.throw('Invalid comparer.');            
@@ -300,7 +261,7 @@ describe('contains tests', function() {
         });
 
         it('Custom comparer allows to search for objects', function() {
-            var arr = l([
+            var arr = [
                 {
                     firstName: 'Clark',
                     lastName: 'Kent'
@@ -309,7 +270,7 @@ describe('contains tests', function() {
                     firstName: 'Clark',
                     lastName: 'Kent'
                 }
-            ]);
+            ];
 
             var obj = {
                 firstName: 'Clark',
@@ -322,10 +283,10 @@ describe('contains tests', function() {
         });
 
         it('Custom comparer allows to search for arrays', function() {
-            var arr = l([
+            var arr = [
                 [1, 2, 3],
                 [4, 5, 6]
-            ]);
+            ];
 
             var value = [1, 2, 3];
 
@@ -351,24 +312,24 @@ describe('contains tests', function() {
 describe('count tests', function() {
     describe('Calling count with no predicate', function() {
         it('Calling count on an empty array returns 0', function() {
-            var arr = l([]);
+            var arr = [];
             expect(arr.count()).to.equal(0);
         });
 
         it('Calling count on a one element array returns 1', function() {
-            var arr = l([1]);
+            var arr = [1];
             expect(arr.count()).to.equal(1);
         });
 
         it('Calling count on a two element array returns 2', function() {
-            var arr = l([1, 2]);
+            var arr = [1, 2];
             expect(arr.count()).to.equal(2);
         });
     });
 
     describe('Calling count with predicate', function() {
         it('Calling count with an invalid predicate causes the function to throw an exception', function() {
-            var arr = l([1, 2 ,3]);
+            var arr = [1, 2 ,3];
 
             expect(() => arr.count(null)).to.throw('Invalid predicate.');
             expect(() => arr.count(1)).to.throw('Invalid predicate.');
@@ -378,14 +339,14 @@ describe('count tests', function() {
         });
 
         it('Count the even and odd numbers in an array', function() {
-            var arr = l([1, 2, 3, 4, 5]);
+            var arr = [1, 2, 3, 4, 5];
 
             expect(arr.count(x => x % 2 == 0)).to.equal(2);
             expect(arr.count(x => x % 2 != 0)).to.equal(3);
         });
 
         it('Count how many people are named Clark', function() {
-            var arr = l([
+            var arr = [
                 {
                     firstName: 'Oliver',
                     lastName: 'Queen'
@@ -398,13 +359,13 @@ describe('count tests', function() {
                     firstName: 'Bruce',
                     lastName: 'Wayne'
                 }
-            ]);
+            ];
 
             expect(arr.count(x => x.firstName == 'Clark')).to.equal(1);
         });
 
         it('Count how many strings have a length of 5', function() {
-            var arr = l(['count', 'length', 'array', 'jLinq', 'object', 'JavaScript']);
+            var arr = ['count', 'length', 'array', 'jLinq', 'object', 'JavaScript'];
 
             expect(arr.count(x => x.length == 5)).to.equal(3);
         });
@@ -412,44 +373,36 @@ describe('count tests', function() {
 });
 
 describe('select tests', function() {
-    it('Missing, null, or undefined selector raises an exception', function() {
-        var arr = l([1, 2, 3]);
-
-        expect(arr.select).to.throw('Invalid selector.');
-        expect(() => arr.select(null)).to.throw('Invalid selector.');
-        expect(() => arr.select(undefined)).to.throw('Invalid selector.');
-    });
-
     it('Return same elements in selector produces a clone of the original array', function() {
-        var arr = l([1, 2, 3]);
-        var result = arr.select(x => x).toArray();
+        var arr = [1, 2, 3];
+        var result = arr.select(x => x);
 
         expect(result).to.deep.equal([1, 2, 3]);
     });
 
     it('Return index in selector', function() {
-        var arr = l([1, 2, 3]);
-        var result = arr.select((x, i) => i).toArray();
+        var arr = [1, 2, 3];
+        var result = arr.select((x, i) => i);
 
         expect(result).to.deep.equal([0, 1, 2]);
     });
 
     it('Apply an operation inside the selector', function() {
-        var arr = l([1, 2, 3]);
-        var result = arr.select(x => x * 2).toArray();
+        var arr = [1, 2, 3];
+        var result = arr.select(x => x * 2);
 
         expect(result).to.deep.equal([2, 4, 6]);
     });
 
     it('Calculate the lengths of strings', function() {
-        var arr = l(['Linq', 'Testing', 'select', 'string']);
-        var result = arr.select(x => x.length).toArray();
+        var arr = ['Linq', 'Testing', 'select', 'string'];
+        var result = arr.select(x => x.length);
 
         expect(result).to.deep.equal([4, 7, 6, 6]);
     });
 
     it('Getting data from objects', function() {
-        var arr = l([
+        var arr = [
             {
                 firstName: 'Bruce',
                 lastName: 'Wayne',
@@ -460,24 +413,24 @@ describe('select tests', function() {
                 lastName: 'Kent',
                 age: 51
             }
-        ]);
+        ];
 
-        var result = arr.select(x => x.firstName + ' ' + x.lastName).toArray();
+        var result = arr.select(x => x.firstName + ' ' + x.lastName);
 
         expect(result).to.deep.equal(['Bruce Wayne', 'Clark Kent']);
     });
 
     it('Chained select calls', function() {
-        var arr = l([1, 2, 3]);
-        var result = arr.select(x => x * 2).select(x => x + 1).toArray();
+        var arr = [1, 2, 3];
+        var result = arr.select(x => x * 2).select(x => x + 1);
 
         expect(result).to.deep.equal([3, 5, 7]);
     });
 
     it('Chaining select calls equals to applying all operations in the same selector', function() {
-        var arr = l([1, 2, 3]);
-        var resultA = arr.select(x => x * 2).select(x => x + 1).toArray();
-        var resultB = arr.select(x => (x * 2) + 1).toArray()
+        var arr = [1, 2, 3];
+        var resultA = arr.select(x => x * 2).select(x => x + 1);
+        var resultB = arr.select(x => (x * 2) + 1);
 
         expect(resultA).to.deep.equal(resultB);
     });
