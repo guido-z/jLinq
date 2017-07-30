@@ -11,10 +11,6 @@ var jLinq = (function() {
 		}
 	};
 
-	var Comparer = function(expression) {
-		this.equals = expression;
-	};
-
 	return new Object({		
 		createCollection: function(array) {
 			validateArray(array);
@@ -117,10 +113,10 @@ var jLinq = (function() {
 						throw new Error('Expected a value.');
 					} 
 					
-					else if(comparer !== undefined) {						
+					else if(comparer !== undefined) {
 						if(Object.prototype.toString.call(comparer) != '[object Function]') {
 							throw new Error('Invalid comparer.');
-						}						
+						}
 					}
 
 					else {
@@ -159,7 +155,17 @@ var jLinq = (function() {
 				 * @return {Number} count
 				 */
 				count: function(predicate) {
-					
+					if(predicate === undefined) {
+						return innerArray.length;
+					}
+
+					else if(predicate !== undefined) {
+						if(Object.prototype.toString.call(predicate) != '[object Function]') {
+							throw new Error('Invalid predicate.');
+						}
+					}
+
+					return innerArray.filter(predicate).length;
 				},
 
 				/*

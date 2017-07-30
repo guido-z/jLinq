@@ -349,7 +349,66 @@ describe('contains tests', function() {
 });
 
 describe('count tests', function() {
+    describe('Calling count with no predicate', function() {
+        it('Calling count on an empty array returns 0', function() {
+            var arr = l([]);
+            expect(arr.count()).to.equal(0);
+        });
 
+        it('Calling count on a one element array returns 1', function() {
+            var arr = l([1]);
+            expect(arr.count()).to.equal(1);
+        });
+
+        it('Calling count on a two element array returns 2', function() {
+            var arr = l([1, 2]);
+            expect(arr.count()).to.equal(2);
+        });
+    });
+
+    describe('Calling count with predicate', function() {
+        it('Calling count with an invalid predicate causes the function to throw an exception', function() {
+            var arr = l([1, 2 ,3]);
+
+            expect(() => arr.count(null)).to.throw('Invalid predicate.');
+            expect(() => arr.count(1)).to.throw('Invalid predicate.');
+            expect(() => arr.count('a')).to.throw('Invalid predicate.');
+            expect(() => arr.count({})).to.throw('Invalid predicate.');
+            expect(() => arr.count([])).to.throw('Invalid predicate.');
+        });
+
+        it('Count the even and odd numbers in an array', function() {
+            var arr = l([1, 2, 3, 4, 5]);
+
+            expect(arr.count(x => x % 2 == 0)).to.equal(2);
+            expect(arr.count(x => x % 2 != 0)).to.equal(3);
+        });
+
+        it('Count how many people are named Clark', function() {
+            var arr = l([
+                {
+                    firstName: 'Oliver',
+                    lastName: 'Queen'
+                },
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent',
+                },
+                {
+                    firstName: 'Bruce',
+                    lastName: 'Wayne'
+                }
+            ]);
+
+            expect(arr.count(x => x.firstName == 'Clark')).to.equal(1);
+        });
+
+        it('Count how many strings have a length of 5', function() {
+            var arr = l(['count', 'length', 'array', 'jLinq', 'object', 'JavaScript']);
+
+            expect(arr.count(x => x.length == 5)).to.equal(3);
+        });
+    });
 });
 
 describe('select tests', function() {
