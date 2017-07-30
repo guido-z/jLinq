@@ -11,6 +11,10 @@ var jLinq = (function() {
 		}
 	};
 
+	var Comparer = function(expression) {
+		this.equals = expression;
+	};
+
 	return new Object({		
 		createCollection: function(array) {
 			validateArray(array);
@@ -39,7 +43,7 @@ var jLinq = (function() {
 				 * condition.
 				 * 
 				 * @param {function} predicate
-				 * @return {Bool} all
+				 * @return {Boolean} all
 				 */ 
 				all: function(predicate) {
 					if(!predicate) {
@@ -61,7 +65,7 @@ var jLinq = (function() {
 				 * whether the sequence contains any elements.
 				 * 
 				 * @param {function} predicate
-				 * @return {Bool} any
+				 * @return {Boolean} any
 				 */
 				any: function(predicate) {
 					if(!predicate) {
@@ -83,7 +87,7 @@ var jLinq = (function() {
 				 * element of the input sequence.
 				 * 
 				 * @param {function} selector
-				 * @return {number} average
+				 * @return {Number} average
 				 */
 				average: function(selector) {
 					if(!selector) {
@@ -100,11 +104,44 @@ var jLinq = (function() {
 				},
 
 				/*
+				 * Determines whether a sequence contains a specified element
+				 * by using a specified comparer.
+				 * 
+				 * @param {any} value
+				 * @param {Function} comparer
+				 * 
+				 * @returns {Boolean}
+				 */
+				contains: function(value, comparer) {					
+					if(value === undefined) {
+						throw new Error('Expected a value.');
+					} 
+					
+					else if(comparer !== undefined) {						
+						if(Object.prototype.toString.call(comparer) != '[object Function]') {
+							throw new Error('Invalid comparer.');
+						}						
+					}
+
+					else {
+						comparer = (x, y) => x == y;
+					}
+
+					for(let item of innerArray) {
+						if(comparer(item, value)) {
+							return true;
+						}
+					}
+
+					return false;
+				},
+
+				/*
 				 * Concatenates two sequences. 'second' must be a valid
 				 * array.
 				 * 
-				 * @param {object Array} second				 
-				 * @return {object Array
+				 * @param {Array} second				 
+				 * @return {Array}
 				 */				
 				concat: function(second) {
 					validateArray(second);
@@ -112,9 +149,23 @@ var jLinq = (function() {
 				},
 
 				/*
+				 * Returns a number that represents how many elements in the
+				 * specified sequence satisfy a condition. If no predicate
+				 * is provided, then it returns de number of elements in the
+				 * sequence.
+				 * 
+				 * @param {Function} predicate
+				 * 
+				 * @return {Number} count
+				 */
+				count: function(predicate) {
+					
+				},
+
+				/*
 				 * Projects each element of a sequence into a new form.
 				 * 
-				 * @param {function} selector
+				 * @param {Function} selector
 				 * @return {Object} select
 				 */
 				select: function(selector) {

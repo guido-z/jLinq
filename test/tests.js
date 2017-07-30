@@ -219,6 +219,139 @@ describe('concat tests', function() {
     });
 });
 
+describe('contains tests', function() {
+    describe('General tests', function() {
+        it('Missing or undefined value raises an exception', function() {
+            var arr = l([1, 2 ,3]);
+
+            expect(arr.contains).to.throw('Expected a value.');
+            expect(() => arr.contains(undefined)).to.throw('Expected a value.');
+        });
+    });
+
+    describe('Default comparer tests', function() {
+        it('Applying contains on an empty collection always returns false', function() {
+            var arr = l([]);
+
+            expect(arr.contains(null)).to.equal(false);            
+            expect(arr.contains(1)).to.equal(false);
+            expect(arr.contains('a')).to.equal(false);
+            expect(arr.contains([1, 2, 3])).to.equal(false);
+            expect(arr.contains({})).to.equal(false);                
+        });
+
+        it('If the passed value is the same as the only item in the array, contains returns true', function() {
+            var arr = l([1]);
+            expect(arr.contains(1)).to.equal(true);
+        });
+
+        it('If the passed value exists in the collection, contains returns true', function() {
+            var arr = l([1, 2]);
+            expect(arr.contains(1)).to.equal(true);
+            expect(arr.contains(2)).to.equal(true);
+        });
+
+        it('If the passed value doesn\'t exist in a non empty collection, contains returns false', function() {
+            var arr = l([1, 2, 4]);
+            expect(arr.contains(3)).to.equal(false);
+        });
+
+        it('Searching for objects always returns false', function() {
+            var arr = l([
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                },
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                }
+            ]);
+
+            var obj = {
+                firstName: 'Clark',
+                lastName: 'Kent'
+            };
+
+            expect(arr.contains(obj)).to.equal(false);
+        });
+
+        it('Searching for arrays always returns false', function() {
+            var arr = l([
+                [1, 2, 3],
+                [4, 5, 6]
+            ]);
+
+            var value = [1, 2, 3];
+
+            expect(arr.contains([1, 2, 3])).to.equal(false);
+        });
+    });
+
+    describe('Custom comparer tests', function() {
+        it('If comparer is not a function, contains throws an exception', function() {
+            var arr = l([1, 2, 3]);
+
+            expect(() => arr.contains(2, null)).to.throw('Invalid comparer.');            
+            expect(() => arr.contains(2, 1)).to.throw('Invalid comparer.');            
+            expect(() => arr.contains(2, '1')).to.throw('Invalid comparer.');            
+            expect(() => arr.contains(2, {})).to.throw('Invalid comparer.');
+            expect(() => arr.contains(2, [])).to.throw('Invalid comparer.');                        
+        });
+
+        it('Custom comparer allows to search for objects', function() {
+            var arr = l([
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                },
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                }
+            ]);
+
+            var obj = {
+                firstName: 'Clark',
+                lastName: 'Kent'
+            };
+
+            var comparer = (x, y) => x.firstName == y.firstName && x.lastName == y.lastName;
+
+            expect(arr.contains(obj, comparer)).to.equal(true);
+        });
+
+        it('Custom comparer allows to search for arrays', function() {
+            var arr = l([
+                [1, 2, 3],
+                [4, 5, 6]
+            ]);
+
+            var value = [1, 2, 3];
+
+            var comparer = function(x, y) {
+                if(x.length != y.length) {
+                    return false;
+                }
+
+                for(var i in x) {
+                    if(x[i] != y[i]) {
+                        return false;
+                    }
+                }
+
+                return true;
+            };
+            
+            expect(arr.contains([1, 2, 3], comparer)).to.equal(true);
+        });
+    });
+});
+
+describe('count tests', function() {
+
+});
+
 describe('select tests', function() {
     it('Missing, null, or undefined selector raises an exception', function() {
         var arr = l([1, 2, 3]);
