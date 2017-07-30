@@ -1,2 +1,2 @@
 # jLinq
-Javascript version of the popular .NET framework
+JavaScript version of the popular .NET framework
