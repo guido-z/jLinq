@@ -372,6 +372,25 @@ describe('count tests', function() {
     });
 });
 
+describe('defaultIfEmpty tests', function() {
+    it('If no default value is provided, defaultIfEmpty throws an exception', function() {
+        var arr = [];
+        expect(() => arr.defaultIfEmpty()).to.throw('Expected a default value.');
+
+        arr = [1, 2, 3];
+        expect(() => arr.defaultIfEmpty()).to.throw('Expected a default value.');
+    });
+
+    it('If the array is empty, defaultIfEmpty returns the provided default value.', function() {
+        var arr = [];
+        expect(arr.defaultIfEmpty(null)).to.equal(null);
+        expect(arr.defaultIfEmpty(1)).to.equal(1);
+        expect(arr.defaultIfEmpty('a')).to.equal('a');
+        expect(arr.defaultIfEmpty({})).to.deep.equal({});
+        expect(arr.defaultIfEmpty([])).to.deep.equal([]);
+    });
+});
+
 describe('select tests', function() {
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];

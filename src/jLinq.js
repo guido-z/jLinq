@@ -70,8 +70,7 @@ var jLinq = (function() {
 	 * by using a specified comparer.
 	 *  
 	 * @param {any} value
-	 * @param {Function} comparer
-	 * 
+	 * @param {Function} comparer	 
 	 * @returns {Boolean}
 	 */
 	Array.prototype.contains = function(value, comparer) {					
@@ -104,8 +103,7 @@ var jLinq = (function() {
 	 * is provided, then it returns de number of elements in the
 	 * sequence.
 	 * 
-	 * @param {Function} predicate
-	 * 
+	 * @param {Function} predicate	 
 	 * @return {Number} count
 	 */
 	Array.prototype.count = function(predicate) {
@@ -123,9 +121,22 @@ var jLinq = (function() {
 	};
 
 	/*
+	 * Returns the elements of the specified sequence or the specified value in
+	 * a singleton collection if the sequence is empty. If the sequence is
+	 * empty and no default value is provided, then it returns the sequence's
+	 * type default value in a singleton collection.
+	 * 
+	 * @param {any} defaultValue	 
+	 * @return {Array}
+	 */
+	Array.prototype.defaultIfEmpty = function(defaultValue) {
+
+	};
+
+	/*
 	 * Projects each element of a sequence into a new form.
 	 * 
-	 * @param {Function} selector
+	 * @param {Function} selector	 
 	 * @return {Object} select
 	 */
 	Array.prototype.select = function(selector) {
