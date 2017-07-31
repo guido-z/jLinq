@@ -1,15 +1,6 @@
-var jLinq = (function() {
+'use strict';
 
-	/*
-	 * Checks whether 'array' is a valid array.
-	 * 
-	 * @param {object Array} array
-	 */
-	var validateArray = function(array) {
-		if(Object.prototype.toString.call(array) != '[object Array]') {
-			throw new Error('Invalid collection.');
-		}
-	};
+var jLinq = (function() {
 
 	/*
 	 * Determines whether all elements of a sequence satisfy a
@@ -63,17 +54,15 @@ var jLinq = (function() {
 	 * @return {Number} average
 	 */
 	Array.prototype.average = function(selector) {
-		if(!selector) {
+		if(selector === undefined) {
 			throw new Error('Invalid selector.');
 		}
-		
-		var sum = 0;
 
-		for(let item of this) {
-			sum += selector(item);
+		else if(Object.prototype.toString.call(selector) != '[object Function]') {			
+			throw new Error('Invalid selector.');			
 		}
-
-		return sum / this.length;
+		
+		return [0].concat(this).reduce((x, y) => x + selector(y)) / this.length;		
 	};
 
 	/*
