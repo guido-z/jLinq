@@ -381,13 +381,35 @@ describe('defaultIfEmpty tests', function() {
         expect(() => arr.defaultIfEmpty()).to.throw('Expected a default value.');
     });
 
-    it('If the array is empty, defaultIfEmpty returns the provided default value.', function() {
+    it('If the array is empty, defaultIfEmpty returns a singleton array with the default value.', function() {
         var arr = [];
-        expect(arr.defaultIfEmpty(null)).to.equal(null);
-        expect(arr.defaultIfEmpty(1)).to.equal(1);
-        expect(arr.defaultIfEmpty('a')).to.equal('a');
-        expect(arr.defaultIfEmpty({})).to.deep.equal({});
-        expect(arr.defaultIfEmpty([])).to.deep.equal([]);
+
+        var result = arr.defaultIfEmpty(null);
+        expect(result.length).to.equal(1);
+        expect(result[0]).to.equal(null);
+
+        result = arr.defaultIfEmpty(1);
+        expect(result.length).to.equal(1);
+        expect(result[0]).to.equal(1);
+
+        result = arr.defaultIfEmpty('a');
+        expect(result.length).to.equal(1);
+        expect(result[0]).to.equal('a');
+
+        result = arr.defaultIfEmpty({});
+        expect(result.length).to.equal(1);
+        expect(result[0]).to.deep.equal({});
+
+        result = arr.defaultIfEmpty([]);
+        expect(result.length).to.equal(1);
+        expect(result[0]).to.deep.equal([]);
+    });
+
+    it('If the array is not empty, defaultIfEmpty returns a copy of the array', function() {
+        var arr = [1, 2, 3];
+
+        expect(arr.defaultIfEmpty(0)).to.not.equal([1, 2, 3]);
+        expect(arr.defaultIfEmpty(0)).to.deep.equal([1, 2, 3]);
     });
 });
 

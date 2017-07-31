@@ -130,16 +130,110 @@ var jLinq = (function() {
 	 * @return {Array}
 	 */
 	Array.prototype.defaultIfEmpty = function(defaultValue) {
+		if(defaultValue === undefined) {
+			throw new Error('Expected a default value.');
+		}
 
+		return this.length == 0 ? [defaultValue] : this.copyWithin([]);
 	};
 
 	/*
+	* Returns a object that represents the value in the predicate
+	*
+	* @param {Function} predicate
+	* @return {Object} object
+	*/
+	Array.prototype.firstOrDefault = function(predicate) {
+		if(predicate === undefined) {
+            if(this.length>0) return this[0];
+			return null;
+		}
+
+		else if(predicate !== undefined) {
+			if ( this.length > 0)
+				return this[0];
+			else
+				return null;
+		}
+
+		for(let i in this){
+			if(predicate(this[i]) === true){
+				return this[i];
+			}
+		}
+
+		return null;
+	};
+
+	Array.prototype.lastOrDefault = function(predicate) {
+		if(predicate === undefined) {
+			if(this.length>0) return this[this.length-1];
+			return null;
+		}
+
+		else if(predicate !== undefined) {
+			if ( this.length > 0)
+				return this[this.length-1];
+			else
+				return null;
+		}
+
+		for(let i in this){
+			if(predicate(this[i]) === true){
+				return this[i];
+			}
+		}
+
+		return null;
+	};
+
+	Array.prototype.remove = function(predicate) {
+        let result = [];
+        for(let i in this){
+            if(predicate(this[i]) !== true && !(this instanceof Function))
+                result.push(this[i]);
+        }
+
+        return result;
+    };
+
+	/*
 	 * Projects each element of a sequence into a new form.
-	 * 
+	 *
 	 * @param {Function} selector	 
 	 * @return {Object} select
 	 */
 	Array.prototype.select = function(selector) {
 		return this.map(selector);		
-	};	
+	};
+
+	Array.prototype.selectMany = function(predicate) {
+        let result = [];
+        for(let i in this){
+            if(predicate(this[i]) === true)
+                result.push(this[i]);
+        }
+
+        return result;
+    };
+
+	/*
+	* Returns an object list that represents the value in the predicate
+	*
+	* @param {Function} predicate
+	* @return {Object} object list
+	*/
+	Array.prototype.where = function(predicate) {
+		if(predicate === undefined) {
+			return this.length;
+		}
+
+		else if(predicate !== undefined) {
+			if(Object.prototype.toString.call(predicate) != '[object Function]') {
+				throw new Error('Invalid predicate.');
+			}
+		}
+
+		return this.filter(predicate);
+	};
 }());
