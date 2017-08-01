@@ -138,6 +138,18 @@ var jLinq = (function() {
 	};
 
 	/*
+	 * Returns distinct elements from a sequence by using a specified
+	 * comparer to compare values. If no comparer is provided, it uses the
+	 * default comparer.
+	 * 
+	 * @param {Function} comparer
+	 * @return {Array}
+	 */ 
+	Array.prototype.distinct = function(comparer) {
+
+	};
+
+	/*
 	* Returns a object that represents the value in the predicate
 	*
 	* @param {Function} predicate

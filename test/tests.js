@@ -413,6 +413,70 @@ describe('defaultIfEmpty tests', function() {
     });
 });
 
+describe('distinct tests', function() {
+    describe('Default comparer tests', function() {
+        it('Applying distinct on an empty array returns a new empty array', function() {
+            var arr = [];
+
+            expect(arr.distinct()).to.not.equal(arr);
+            expect(arr.distinct()).to.deep.equal([]);
+        });
+
+        it('Applying distinct on a one element array returns a new array with the same element', function() {
+            var arr = [1];
+
+            expect(arr.distinct()).to.not.equal(arr);
+            expect(arr.distinct()).to.deep.equal([1]);
+        });
+
+        it('Applying distinct on an array with different elements returns a new array with the same elements', function() {
+            var arr = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+
+            expect(arr.distinct()).to.not.equal(arr);
+            expect(arr.distinct()).to.deep.equal(arr);
+        });
+
+        it('Applying distinct on on array with repeated elements filters out the duplicates', function() {
+            var arr = [1, 2, 1, 3];
+            expect(arr.distinct()).to.deep.equal([1, 2, 3]);
+
+            arr = [1, 1, 1, 1, 1];
+            expect(arr.distinct()).to.deep.equal([1]);
+
+            arr = [1, 1, 1, 2, 2, 2, 3];
+            expect(arr.distinct()).to.deep.equal([1, 2, 3]);
+        });
+
+        it('Applying distinct on an array of objects with the default comparer\
+            always returns a new array with the same elements', function() {
+            var arr = [
+                { firstName: 'Clark', lastName: 'Kent' },        
+                { firstName: 'Clark', lastName: 'Kent' },
+                { firstName: 'Clark', lastName: 'Kent' }
+            ];
+
+            expect(arr.distinct()).to.not.equal(arr);
+            expect(arr.distinct()).to.deep.equal(arr);
+        });
+
+        it('Applying distinct on an array of arrays with the default comparer\
+            always returns a new array with the same elements', function() {
+            var arr = [
+                [1, 2, 3],
+                [1, 2, 3],
+                [1, 2, 3]
+            ];
+
+            expect(arr.distinct()).to.not.equal(arr);
+            expect(arr.distinct()).to.deep.equal(arr);
+        });
+    });
+
+    describe('User defined comparer tests', function() {
+
+    });
+});
+
 describe('select tests', function() {
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];
