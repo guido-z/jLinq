@@ -150,11 +150,11 @@ var jLinq = (function() {
 	};
 
 	/*
-	* Returns a object that represents the value in the predicate
-	*
-	* @param {Function} predicate
-	* @return {Object} object
-	*/
+	 * Returns a object that represents the value in the predicate
+	 *
+	 * @param {Function} predicate
+	 * @return {Object} object
+	 */
 	Array.prototype.firstOrDefault = function(predicate) {
 		if(predicate === undefined) {
             if(this.length>0) return this[0];
@@ -230,11 +230,11 @@ var jLinq = (function() {
     };
 
 	/*
-	* Returns an object list that represents the value in the predicate
-	*
-	* @param {Function} predicate
-	* @return {Object} object list
-	*/
+	 * Returns an object list that represents the value in the predicate
+	 *
+	 * @param {Function} predicate
+	 * @return {Object} object list
+	 */
 	Array.prototype.where = function(predicate) {
 		if(predicate === undefined) {
 			return this.length;

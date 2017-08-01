@@ -450,7 +450,7 @@ describe('distinct tests', function() {
         it('Applying distinct on an array of objects with the default comparer\
             always returns a new array with the same elements', function() {
             var arr = [
-                { firstName: 'Clark', lastName: 'Kent' },        
+                { firstName: 'Clark', lastName: 'Kent' },
                 { firstName: 'Clark', lastName: 'Kent' },
                 { firstName: 'Clark', lastName: 'Kent' }
             ];
@@ -473,7 +473,18 @@ describe('distinct tests', function() {
     });
 
     describe('User defined comparer tests', function() {
+        it('Filter out objects with the same properties and values', function() {
+            var arr = [
+                { firstName: 'Clark', lastName: 'Kent' },
+                { firstName: 'Clark', lastName: 'Kent' },
+                { firstName: 'Clark', lastName: 'Kent' }
+            ];
 
+            var comparer = (x, y) => x.firstName == y.firstName && x.lastName == y.lastName;
+
+            expect(arr.distinct(comparer).length).to.equal(1);
+            expect(arr.distinct(comparer).shift()).to.equal(arr.shift());
+        });
     });
 });
 
