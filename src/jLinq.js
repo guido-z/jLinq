@@ -14,20 +14,14 @@ var jLinq = (function() {
 			throw new Error('Invalid predicate.');
 		}
 
-		for(let item of this) {
-			if(predicate(item) === false) {
-				return false;
-			}
-		}
-
-		return true;
+		return this.every(predicate);
 	};
 
 	/*
 	 * Determines whether any element of a sequence satisfies a
 	 * condition. If no predicate is provided, then it returns
 	 * whether the sequence contains any elements.
-	 * 
+	 *
 	 * @param {Function} predicate
 	 * @return {Boolean} any
 	 */
@@ -35,21 +29,15 @@ var jLinq = (function() {
 		if(!predicate) {
 			return this.length > 0;
 		}
-		
-		for(let item of this) {
-			if(predicate(item) === true) {
-				return true;
-			}
-		}
 
-		return false;
+		return this.some(predicate);
 	};
 
 	/*
 	 * Computes the average of a sequence of numeric values that
 	 * are obtained by invoking a transform function on each
 	 * element of the input sequence.
-	 * 
+	 *
 	 * @param {Function} selector
 	 * @return {Number} average
 	 */
@@ -146,7 +134,32 @@ var jLinq = (function() {
 	 * @return {Array}
 	 */ 
 	Array.prototype.distinct = function(comparer) {
+		if(comparer !== undefined) {
+			if(Object.prototype.toString.call(comparer) != '[object Function]') {
+				throw new Error('Invalid comparer.');
+			}
+		}
 
+		else {
+			comparer = (x, y) => x == y;
+		}
+
+		var result = this.length ? [this[0]] : [];
+
+		for(let item of this.slice(1)) {
+			for(let distinct of result) {
+				var insert = true;
+
+				if(comparer(item, distinct)) {
+					insert = false;
+					break;
+				}
+			}
+
+			insert && result.push(item);
+		}
+
+		return result;
 	};
 
 	/*

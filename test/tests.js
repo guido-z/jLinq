@@ -473,6 +473,16 @@ describe('distinct tests', function() {
     });
 
     describe('User defined comparer tests', function() {
+        it('Passing an invalid comparer causes distinct to throw an exception', function() {
+            var arr = [1, 2, 3];
+
+            expect(() => arr.distinct(null)).to.throw('Invalid comparer.');
+            expect(() => arr.distinct(1)).to.throw('Invalid comparer.');
+            expect(() => arr.distinct('a')).to.throw('Invalid comparer.');
+            expect(() => arr.distinct({})).to.throw('Invalid comparer.');
+            expect(() => arr.distinct([])).to.throw('Invalid comparer.');
+        });
+
         it('Filter out objects with the same properties and values', function() {
             var arr = [
                 { firstName: 'Clark', lastName: 'Kent' },
@@ -483,7 +493,44 @@ describe('distinct tests', function() {
             var comparer = (x, y) => x.firstName == y.firstName && x.lastName == y.lastName;
 
             expect(arr.distinct(comparer).length).to.equal(1);
-            expect(arr.distinct(comparer).shift()).to.equal(arr.shift());
+            expect(arr.distinct(comparer)[0]).to.equal(arr[0]);
+        });
+
+        it('Get one person object for each age', function() {
+            var arr = [
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent',
+                    age: 21
+                },
+                {
+                    firstName: 'Bruce',
+                    lastName: 'Wayne',
+                    age: 25
+                },
+                {
+                    firstName: 'Arthur',
+                    lastName: 'Curry',
+                    age: 25
+                },
+                {
+                    firstName: 'Barry',
+                    lastName: 'Allen',
+                    age: 21
+                },
+                {
+                    firstName: 'Oliver',
+                    lastName: 'Queen',
+                    age: 30
+                }
+            ];
+
+            var result = arr.distinct((x, y) => x.age == y.age);
+
+            expect(result.length).to.equal(3);
+            expect(result[0]).to.equal(arr[0]);
+            expect(result[1]).to.equal(arr[1]);
+            expect(result[2]).to.equal(arr[4]);
         });
     });
 });
