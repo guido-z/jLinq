@@ -18,6 +18,10 @@ var jLinq = (function() {
 		};
 	};
 
+	var _throw = function(message) {
+		throw new Error(message);
+	}
+
 	/*
 	 * Determines whether all elements of a sequence satisfy a
 	 * condition.
@@ -230,6 +234,28 @@ var jLinq = (function() {
 		}
 
 		return result;
+	}
+
+	/*
+	 * Returns the first element of a sequence. If a predicate is provided, it
+	 * returns the first element that satisfies the condition.
+	 *
+	 * @parm {Function} predicate
+	 * @return {any}
+	 */
+	Array.prototype.first = function(predicate) {
+		try {
+			var result = this.find(predicate || (x => x));
+
+			return result || _throw('No elements satisfy the condition or the array is empty.');
+		}
+		catch(err) {
+			if(err.message == 'No elements satisfy the condition or the array is empty.') {
+				throw err;
+			}
+
+			_throw('Invalid predicate.');
+		}
 	}
 
 	/*

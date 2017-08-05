@@ -746,6 +746,90 @@ describe('except tests', function() {
     });
 });
 
+describe('first tests', function() {
+    describe('Calling first with no predicate', function() {
+        it('Calling first on an empty array causes the function to throw an exception', function() {
+            var arr = [];
+
+            expect(() => arr.first()).to.throw('No elements satisfy the condition or the array is empty.');
+        });
+
+        it('Calling first on a one element array returns the element', function() {
+            var arr = [1];
+
+            expect(arr.first()).to.equal(1);
+        });
+
+        it('Calling first on an array of object returns the first object', function() {
+            var arr = [
+                { value: 1 },
+                { value: 2 },
+                { value: 3 }
+            ];
+
+            expect(arr.first()).to.equal(arr[0]);
+        });
+
+        it('Calling first on an array of strings', function() {
+            var arr = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
+
+            expect(arr.first()).to.equal('first');
+        });
+    });
+
+    describe('Calling first with predicate', function() {
+        it('Passing an invalid predicate causes the function to throw an exception', function() {
+            var arr = [1, 2, 3];
+
+            // expect(() => arr.first(null)).to.throw('Invalid predicate.');
+            expect(() => arr.first(1)).to.throw('Invalid predicate.');
+            expect(() => arr.first('predicate')).to.throw('Invalid predicate.');
+            expect(() => arr.first({})).to.throw('Invalid predicate.');
+            expect(() => arr.first([])).to.throw('Invalid predicate.');
+        });
+
+        it('Calling first on an empty array causes the function to throw an exception', function() {
+            var arr = [];
+
+            expect(() => arr.first(x => x)).to.throw('No elements satisfy the condition or the array is empty.');
+        });
+
+        it('If no elements satisfy the predicate condition, first throws an exception', function() {
+            var arr = [1, 2, 3];
+
+            expect(() => arr.first(x => x > 3)).to.throw('No elements satisfy the condition or the array is empty.');
+        });
+
+        it('Other tests', function() {
+            var arr = [1, 2, 3, 4];
+
+            expect(arr.first(x => x > 3)).to.equal(4);
+
+
+            arr = [
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                },
+                {
+                    firstName: 'Bruce',
+                    lastName: 'Wayne'
+                },
+                {
+                    firstName: 'Barry',
+                    lastName: 'Allen'
+                },
+                {
+                    firstName: 'Oliver',
+                    lastName: 'Queen'
+                }
+            ];
+
+            expect(arr.first(x => x.firstName + ' ' + x.lastName == 'Barry Allen')).to.equal(arr[2]);
+        });
+    });
+});
+
 describe('select tests', function() {
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];
