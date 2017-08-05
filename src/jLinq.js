@@ -2,6 +2,22 @@
 
 var jLinq = (function() {
 
+	var Set = function(elements, comparer) {
+		var _elements = elements.slice();
+		var comparer = comparer;
+
+		this.add = function(element) {
+			for(let item of _elements) {
+				if(comparer(element, item)) {
+					return false;
+				}
+			}
+
+			_elements.push(element);
+			return true;
+		};
+	};
+
 	/*
 	 * Determines whether all elements of a sequence satisfy a
 	 * condition.
@@ -179,6 +195,41 @@ var jLinq = (function() {
 		}
 
 		return this[index];
+	}
+
+	/*
+	 * Produces the set difference of two sequences. If no comparer is provided
+	 * then it uses the default comparer.
+	 *
+	 * @param {Array} array
+	 * @param {Function} comparer
+	 * @return {Array}
+	 */
+	Array.prototype.except = function(array, comparer) {
+		if(Object.prototype.toString.call(array) != '[object Array]') {
+			throw new Error('Expected an array.');
+		}
+
+		else if(comparer !== undefined) {
+			if(Object.prototype.toString.call(comparer) != '[object Function]') {
+				throw new Error('Invalid comparer.');
+			}
+		}
+
+		else {
+			comparer = (x, y) => x == y;
+		}
+
+		var set = new Set(array, comparer);
+		var result = new Array();
+
+		for(let item of this) {
+			if(set.add(item)) {
+				result.push(item);
+			}
+		}
+
+		return result;
 	}
 
 	/*

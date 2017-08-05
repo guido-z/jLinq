@@ -596,6 +596,156 @@ describe('elementAt tests', function() {
     });
 });
 
+describe('except tests', function() {
+    describe('Default comparer tests', function() {
+        it('Calling except with an invalid second array causes the funcion to throw an exception', function() {
+            var arr1 = [1, 2, 3];
+
+            expect(() => arr1.except()).to.throw('Expected an array.');
+            expect(() => arr1.except(null)).to.throw('Expected an array.');
+            expect(() => arr1.except(1)).to.throw('Expected an array.');
+            expect(() => arr1.except('array')).to.throw('Expected an array.');
+            expect(() => arr1.except({})).to.throw('Expected an array.');
+        });
+
+        it('Calling except with two empty arrays returns an empty array', function() {
+            var arr1 = [];
+            var arr2 = [];
+
+            expect(arr1.except(arr2)).to.deep.equal([]);
+        });
+
+        it('Calling except with an empty first array returns an empty array', function() {
+            var arr1 = [];
+            var arr2 = [4, 5, 6];
+
+            expect(arr1.except(arr2)).to.not.equal(arr1);
+            expect(arr1.except(arr2)).to.deep.equal([]);
+        });
+
+        it('Calling except with an empty second array returns a copy of the first array', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [];
+
+            expect(arr1.except(arr2)).to.deep.equal(arr1);
+        });
+
+        it('If both arrays have the same elements, except returns an empty array', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [1, 2, 3];
+
+            expect(arr1.except(arr2)).to.deep.equal([]);
+        });
+
+        it('Except removes duplicates from the first array', function() {
+            var arr1 = [1, 1, 2, 3, 1];
+            var arr2 = [4, 5, 6];
+
+            expect(arr1.except(arr2)).to.deep.equal([1, 2, 3]);
+        });
+
+        it('Calling except with arrays of objects returns a new array with the elements of the first array', function() {
+            var arr1 = [
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                },
+                {
+                    firstName: 'Bruce',
+                    lastName: 'Wayne'
+                }
+            ];
+
+            var arr2 = [
+                {
+                    firstName: 'Barry',
+                    lastName: 'Allen'
+                },
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                }
+            ];
+
+            var result = arr1.except(arr2);
+
+            expect(result.length).to.equal(2);
+            expect(result[0]).to.equal(arr1[0]);
+            expect(result[1]).to.equal(arr1[1]);
+        });
+
+        it('Calling except with the same array as parameter returns an empty array', function() {
+            var arr = [1, 2, 3];
+
+            expect(arr.except(arr)).to.deep.equal([]);
+        });
+
+        it('Numeric array tests', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [1, 3];
+
+            expect(arr1.except(arr2)).to.deep.equal([2]);
+            expect(arr2.except(arr1)).to.deep.equal([]);
+
+
+            arr1 = [1, 1, 1];
+            arr2 = [1];
+
+            expect(arr1.except(arr2)).to.deep.equal([]);
+            expect(arr2.except(arr1)).to.deep.equal([]);
+
+
+            arr1 = [1, 2, 3];
+            arr2 = [4, 5, 6];
+
+            expect(arr1.except(arr2)).to.deep.equal(arr1);
+            expect(arr2.except(arr1)).to.deep.equal(arr2);
+        });
+    });
+
+    describe('Custom comparer tests', function() {
+        it('Passing an invalid comparer causes the function to throw an exception', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [4, 5, 6];
+
+            expect(() => arr1.except(arr2, null)).to.throw('Invalid comparer.');
+            expect(() => arr1.except(arr2, 1)).to.throw('Invalid comparer.');
+            expect(() => arr1.except(arr2, 'comparer')).to.throw('Invalid comparer.');
+            expect(() => arr1.except(arr2, {})).to.throw('Invalid comparer.');
+            expect(() => arr1.except(arr2, [])).to.throw('Invalid comparer.');
+        });
+
+        it('Calling except with arrays of object using a custom comparer returns the expected result', function() {
+            var arr1 = [
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                },
+                {
+                    firstName: 'Bruce',
+                    lastName: 'Wayne'
+                }
+            ];
+
+            var arr2 = [
+                {
+                    firstName: 'Barry',
+                    lastName: 'Allen'
+                },
+                {
+                    firstName: 'Clark',
+                    lastName: 'Kent'
+                }
+            ];
+
+            var comparer = (x, y) => x.firstName == y.firstName && x.lastName == y.lastName;
+            var result = arr1.except(arr2, comparer);
+            expect(result.length).to.equal(1);
+            expect(result[0]).to.deep.equal(arr1[1]);
+        });
+    });
+});
+
 describe('select tests', function() {
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];
