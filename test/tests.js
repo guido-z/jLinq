@@ -535,6 +535,67 @@ describe('distinct tests', function() {
     });
 });
 
+describe('elementAt tests', function() {
+    it('Passing a non integer index causes the function to throw an exception', function() {
+        var arr = [1, 2, 3];
+
+        expect(() => arr.elementAt()).to.throw('Expected an integer.');
+        expect(() => arr.elementAt(null)).to.throw('Expected an integer.');
+        expect(() => arr.elementAt(1.5)).to.throw('Expected an integer.');
+        expect(() => arr.elementAt('index')).to.throw('Expected an integer.');
+        expect(() => arr.elementAt({})).to.throw('Expected an integer.');
+        expect(() => arr.elementAt([])).to.throw('Expected an integer.');
+    });
+
+    it('Passing an out of bounds index causes the function to throw an exception.', function() {
+        var arr = [1, 2, 3];
+
+        expect(() => arr.elementAt(-1)).to.throw('Index is out of bounds.');
+        expect(() => arr.elementAt(3)).to.throw('Index is out of bounds.');
+
+        arr = [];
+
+        expect(() => arr.elementAt(-1)).to.throw('Index is out of bounds.');
+        expect(() => arr.elementAt(0)).to.throw('Index is out of bounds.');
+        expect(() => arr.elementAt(1)).to.throw('Index is out of bounds.');
+    });
+
+    it('Passing \'length - 1\' as index causes the function to return the last element', function() {
+        var arr = [1, 2, 3];
+
+        expect(arr.elementAt(arr.length - 1)).to.equal(3);
+    });
+
+    it('Passing a valid index causes the function to return the correct value', function() {
+        var arr = new Array();
+
+        // Fill array with numbers from 0 to 1000.
+        for(var i = 0; i <= 1000; i++) {
+            arr.push(i);
+        }
+
+        for(var i = 0; i < arr.length; i++) {
+            expect(arr.elementAt(i)).to.equal(arr[i]);
+        }
+    });
+
+    it('Calling elementAt on an array of objects returns the actual object in the selected position', function() {
+        var arr = [
+            {
+                firstName: 'Clark',
+                lastName: 'Kent'
+            },
+            {
+                firstName: 'Bruce',
+                lastName: 'Wayne'
+            }
+        ];
+
+        expect(arr.elementAt(0)).to.equal(arr[0]);
+        expect(arr.elementAt(1)).to.equal(arr[1]);
+    });
+});
+
 describe('select tests', function() {
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];

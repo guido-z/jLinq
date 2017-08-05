@@ -49,8 +49,9 @@ var jLinq = (function() {
 		else if(Object.prototype.toString.call(selector) != '[object Function]') {			
 			throw new Error('Invalid selector.');			
 		}
-		
-		return [0].concat(this).reduce((x, y) => x + selector(y)) / this.length;		
+
+		// Concatenating this to [0] handles the empty-array case.
+		return [0].concat(this).reduce((x, y) => x + selector(y)) / this.length;
 	};
 
 	/*
@@ -161,6 +162,24 @@ var jLinq = (function() {
 
 		return result;
 	};
+
+	/*
+	 * Returns the element at a specified index.
+	 *
+	 * @param {Int} index
+	 * @return {any}
+	 */
+	Array.prototype.elementAt = function(index) {
+		if(index !== parseInt(index)) {
+			throw new Error('Expected an integer.');
+		}
+
+		else if(index < 0 || index >= this.length) {
+			throw new Error('Index is out of bounds.');
+		}
+
+		return this[index];
+	}
 
 	/*
 	 * Returns a object that represents the value in the predicate
