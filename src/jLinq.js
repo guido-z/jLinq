@@ -20,7 +20,15 @@ var jLinq = (function() {
 
 	var _throw = function(message) {
 		throw new Error(message);
-	}
+	};
+
+	var isArray = function(array) {
+		return Object.prototype.toString.call(array) == '[object Array]';
+	};
+
+	var isFunction = function(func) {
+		return Object.prototype.toString.call(func) == '[object Function]';
+	};
 
 	/*
 	 * Determines whether all elements of a sequence satisfy a
@@ -28,13 +36,14 @@ var jLinq = (function() {
 	 * 
 	 * @param {Function} predicate
 	 * @return {Boolean} all
-	 */ 
+	 */
 	Array.prototype.all = function(predicate) {
-		if(!predicate) {
-			throw new Error('Invalid predicate.');
+		try {
+			return this.every(predicate);
 		}
-
-		return this.every(predicate);
+		catch(err) {
+			_throw('Invalid predicate.');
+		}
 	};
 
 	/*
@@ -46,11 +55,12 @@ var jLinq = (function() {
 	 * @return {Boolean} any
 	 */
 	Array.prototype.any = function(predicate) {
-		if(!predicate) {
-			return this.length > 0;
+		try {
+			return predicate === undefined ? this.length > 0 : this.some(predicate);
 		}
-
-		return this.some(predicate);
+		catch(err) {
+			_throw('Invalid predicate.');
+		}
 	};
 
 	/*
@@ -62,16 +72,18 @@ var jLinq = (function() {
 	 * @return {Number} average
 	 */
 	Array.prototype.average = function(selector) {
-		if(selector === undefined) {
-			throw new Error('Invalid selector.');
+		try {
+			return this.length ?
+				[0].concat(this).reduce((x, y) => x + selector(y)) / this.length
+				: _throw('The array is empty.');
 		}
+		catch(err) {
+			if(err.message == 'The array is empty.') {
+				throw err;
+			}
 
-		else if(Object.prototype.toString.call(selector) != '[object Function]') {			
-			throw new Error('Invalid selector.');			
+			_throw('Invalid selector.');
 		}
-
-		// Concatenating this to [0] handles the empty-array case.
-		return [0].concat(this).reduce((x, y) => x + selector(y)) / this.length;
 	};
 
 	/*
@@ -82,14 +94,14 @@ var jLinq = (function() {
 	 * @param {Function} comparer	 
 	 * @returns {Boolean}
 	 */
-	Array.prototype.contains = function(value, comparer) {					
+	Array.prototype.contains = function(value, comparer) {
 		if(value === undefined) {
-			throw new Error('Expected a value.');
-		} 
-		
+			_throw('Expected a value.');
+		}
+
 		else if(comparer !== undefined) {
-			if(Object.prototype.toString.call(comparer) != '[object Function]') {
-				throw new Error('Invalid comparer.');
+			if(!isFunction(comparer)) {
+				_throw('Invalid comparer.');
 			}
 		}
 
@@ -120,10 +132,8 @@ var jLinq = (function() {
 			return this.length;
 		}
 
-		else if(predicate !== undefined) {
-			if(Object.prototype.toString.call(predicate) != '[object Function]') {
-				throw new Error('Invalid predicate.');
-			}
+		else if(!isFunction(predicate)) {
+			_throw('Invalid predicate.');
 		}
 
 		return this.filter(predicate).length;
@@ -155,14 +165,12 @@ var jLinq = (function() {
 	 * @return {Array}
 	 */ 
 	Array.prototype.distinct = function(comparer) {
-		if(comparer !== undefined) {
-			if(Object.prototype.toString.call(comparer) != '[object Function]') {
-				throw new Error('Invalid comparer.');
-			}
+		if(comparer === undefined) {
+			comparer = (x, y) => x == y;
 		}
 
-		else {
-			comparer = (x, y) => x == y;
+		else if(!isFunction(comparer)) {
+			_throw('Invalid comparer.');
 		}
 
 		var result = this.length ? [this[0]] : [];
@@ -191,11 +199,11 @@ var jLinq = (function() {
 	 */
 	Array.prototype.elementAt = function(index) {
 		if(index !== parseInt(index)) {
-			throw new Error('Expected an integer.');
+			_throw('Expected an integer.');
 		}
 
 		else if(index < 0 || index >= this.length) {
-			throw new Error('Index is out of bounds.');
+			_throw('Index is out of bounds.');
 		}
 
 		return this[index];
@@ -210,18 +218,16 @@ var jLinq = (function() {
 	 * @return {Array}
 	 */
 	Array.prototype.except = function(array, comparer) {
-		if(Object.prototype.toString.call(array) != '[object Array]') {
-			throw new Error('Expected an array.');
+		if(!isArray(array)) {
+			_throw('Expected an array.');
 		}
 
-		else if(comparer !== undefined) {
-			if(Object.prototype.toString.call(comparer) != '[object Function]') {
-				throw new Error('Invalid comparer.');
-			}
-		}
-
-		else {
+		else if(comparer === undefined) {
 			comparer = (x, y) => x == y;
+		}
+
+		else if(!isFunction(comparer)) {
+			_throw('Invalid comparer.');
 		}
 
 		var set = new Set(array, comparer);

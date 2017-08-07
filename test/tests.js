@@ -138,7 +138,19 @@ describe('any tests', function() {
 describe('average tests', function() {
     it('Missing, null, or undefined selector raises an exception', function() {
         var arr = [1, 2, 3, 4];
-        expect(arr.average).to.throw('Invalid selector.');
+
+        expect(() => arr.average()).to.throw('Invalid selector.');
+        expect(() => arr.average(null)).to.throw('Invalid selector.');
+        expect(() => arr.average(1)).to.throw('Invalid selector.');
+        expect(() => arr.average('selector')).to.throw('Invalid selector.');
+        expect(() => arr.average({})).to.throw('Invalid selector.');
+        expect(() => arr.average([])).to.throw('Invalid selector.');
+    });
+
+    it('Calling average with an empty array causes the function to throw an exception', function() {
+        var arr = [];
+        
+        expect(() => arr.average(x => x)).to.throw('The array is empty.');
     });
 
     it('Calculate the average of integers', function() {
