@@ -7,14 +7,26 @@ var jLinq = (function() {
 		var comparer = comparer;
 
 		this.add = function(element) {
+			if(!this.contains(element)) {
+				_elements.push(element);
+				return true;
+			}
+
+			return false;
+		};
+
+		this.contains = function(element) {
 			for(let item of _elements) {
 				if(comparer(element, item)) {
-					return false;
+					return true;
 				}
 			}
 
-			_elements.push(element);
-			return true;
+			return false;
+		};
+
+		this.getElements = function() {
+			return _elements.slice();
 		};
 	};
 
@@ -291,6 +303,39 @@ var jLinq = (function() {
 
 		return null;
 	};
+
+	/*
+	 * Produces the set intersection of two sequences. If no comparer is
+	 * provided, it uses the default comparer.
+	 *
+	 * @param {Array} array
+	 * @param {Function} comparer
+	 * @return {Array}
+	 */
+	Array.prototype.intersect = function(array, comparer) {
+		if(!isArray(array)) {
+			_throw('Expected an array.');
+		}
+
+		else if(comparer === undefined) {
+			comparer = (x, y) => x == y;
+		}
+
+		else if(!isFunction(comparer)) {
+			_throw('Expected a function.');
+		}
+
+		var elements = new Set(array, comparer);
+		var result = new Set([], comparer);
+
+		for(let item of this) {
+			if(elements.contains(item)) {
+				result.add(item);
+			}
+		}
+
+		return result.getElements();
+	}
 
 	Array.prototype.lastOrDefault = function(predicate) {
 		if(predicate === undefined) {

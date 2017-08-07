@@ -842,6 +842,160 @@ describe('first tests', function() {
     });
 });
 
+describe('intersect tests', function() {
+    describe('Default comparer tests', function() {
+        it('Passing an invalid array causes the function to throw an exception', function() {
+            var arr1 = [1, 2, 3];
+
+            expect(() => arr1.intersect()).to.throw('Expected an array.');
+            expect(() => arr1.intersect(undefined)).to.throw('Expected an array.');
+            expect(() => arr1.intersect(null)).to.throw('Expected an array.');
+            expect(() => arr1.intersect(0)).to.throw('Expected an array.');
+            expect(() => arr1.intersect('array')).to.throw('Expected an array.');
+            expect(() => arr1.intersect(false)).to.throw('Expected an array.');
+            expect(() => arr1.intersect({})).to.throw('Expected an array.');
+        });
+
+        it('Intersection between two empty arrays is an empty array', function() {
+            var arr1 = [];
+            var arr2 = [];
+
+            expect(arr1.intersect(arr2)).to.not.equal(arr1);
+            expect(arr1.intersect(arr2)).to.not.equal(arr2);
+            expect(arr1.intersect(arr2)).to.deep.equal([]);
+        });
+
+        it('Intersection between an empty array and a non empty array is an empty array', function() {
+            var arr1 = [];
+            var arr2 = [4, 5, 6];
+
+            expect(arr1.intersect(arr2)).to.not.equal(arr1);
+            expect(arr1.intersect(arr2)).to.deep.equal([]);
+        });
+
+        it('Intersection between a non empty array and an empty array is an empty array', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [];
+
+            expect(arr1.intersect(arr2)).to.not.equal(arr2);
+            expect(arr1.intersect(arr2)).to.deep.equal([]);
+        });
+
+        it('Intersection between two non empty arrays that do not have common elements is an empty array', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [4, 5, 6];
+
+            expect(arr1.intersect(arr2)).to.deep.equal([]);
+        });
+
+        it('Intersection between two non empty arrays that have one common element is a one element array', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [3, 4, 5];
+
+            expect(arr1.intersect(arr2)).to.deep.equal([3]);
+        });
+
+        it('Intersection between two arrays that have the same elements is a copy of the arrays', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [1, 2, 3];
+
+            expect(arr1.intersect(arr2)).to.not.equal(arr1);
+            expect(arr1.intersect(arr2)).to.not.equal(arr2);
+            expect(arr1.intersect(arr2)).to.deep.equal(arr1);
+        });
+
+        it('The result of intersect does not include duplicate elements', function() {
+            var arr1 = [1, 1, 2, 3];
+            var arr2 = [4, 5, 1];
+
+            expect(arr1.intersect(arr2)).to.deep.equal([1]);
+
+            arr1 = [1, 2, 1, 2, 3];
+            arr2 = [4, 5, 1, 2, 1];
+
+            expect(arr1.intersect(arr2)).to.deep.equal([1, 2]);
+        });
+
+        it('Other intersect tests', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [1, 4, 5];
+            expect(arr1.intersect(arr2)).to.deep.equal([1]);
+
+
+            arr2 = [4, 1, 5, 6];
+            expect(arr1.intersect(arr2)).to.deep.equal([1]);
+
+
+            arr2 = [4, 5, 1];
+            expect(arr1.intersect(arr2)).to.deep.equal([1]);
+        });
+
+        it('Using the default comparer with objects causes the function to return an empty array', function() {
+            var arr1 = [{ value: 1 }, { value: 2 }, { value: 3 }];
+            var arr2 = [{ value: 1 }, { value: 2 }, { value: 3 }];
+
+            expect(arr1.intersect(arr2)).to.deep.equal([]);
+        });
+    });
+
+    describe('Custom comparer tests', function() {
+        it('Passing an invalid comparer causes the function to throw an exception', function() {
+            var arr1 = [1, 2, 3];
+            var arr2 = [4, 5, 6];
+
+            expect(() => arr1.intersect(arr2, null)).to.throw('Expected a function.');
+            expect(() => arr1.intersect(arr2, 0)).to.throw('Expected a function.');
+            expect(() => arr1.intersect(arr2, 'comparer')).to.throw('Expected a function.');
+            expect(() => arr1.intersect(arr2, false)).to.throw('Expected a function.');
+            expect(() => arr1.intersect(arr2, {})).to.throw('Expected a function.');
+            expect(() => arr1.intersect(arr2, [])).to.throw('Expected a function.');
+        });
+
+        it('Get an array of people who have the same name and age', function() {
+            var arr1 = [
+                {
+                    name: 'Clark',
+                    age: 20
+                },
+                {
+                    name: 'Bruce',
+                    age: 22
+                },
+                {
+                    name: 'Barry',
+                    age: 24
+                },
+                {
+                    name: 'Oliver',
+                    age: 26
+                }
+            ];
+
+            var arr2 = [
+                {
+                    name: 'Barry',
+                    age: 24
+                },
+                {
+                    name: 'Clark',
+                    age: 21
+                },
+                {
+                    name: 'Bruce',
+                    age: 22
+                }
+            ];
+
+            var comparer = (x, y) => x.name == y.name && x.age == y.age;
+            var result = arr1.intersect(arr2, comparer);
+
+            expect(result.length).to.equal(2);
+            expect(result[0]).to.deep.equal(arr1[1]);
+            expect(result[1]).to.deep.equal(arr1[2]);
+        });
+    });
+});
+
 describe('select tests', function() {
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];
