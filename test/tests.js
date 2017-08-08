@@ -766,7 +766,7 @@ describe('first tests', function() {
             expect(() => arr.first()).to.throw('No elements satisfy the condition or the array is empty.');
         });
 
-        it('Calling first on a one element array returns the element', function() {
+        it('Calling first on a one element array returns the only element', function() {
             var arr = [1];
 
             expect(arr.first()).to.equal(1);
@@ -992,6 +992,83 @@ describe('intersect tests', function() {
             expect(result.length).to.equal(2);
             expect(result[0]).to.deep.equal(arr1[1]);
             expect(result[1]).to.deep.equal(arr1[2]);
+        });
+    });
+});
+
+describe('last tests', function() {
+    describe('Calling last with no predicate', function() {
+        it('Calling last with an empty array causes the function to throw an exception', function() {
+            var arr = [];
+
+            expect(() => arr.last()).to.throw('No elements satisfy the condition or the array is empty.');
+        });
+
+        it('Calling last on a one element array returns the only element', function() {
+            var arr = [1];
+            expect(arr.last()).to.equal(1);
+
+            arr = [true];
+            expect(arr.last()).to.equal(true);
+
+            arr = ['last'];
+            expect(arr.last()).to.equal('last');
+
+            arr = [{ value: 1 }];
+            expect(arr.last()).to.equal(arr[0]);
+
+            arr = [[1, 2, 3]];
+            expect(arr.last()).to.equal(arr[0]);
+        });
+
+        it('Calling last on an array with many elements returns the last one', function() {
+            var arr = [1, 2];
+            expect(arr.last()).to.equal(2);
+
+            arr = [1, 2, 3];
+            expect(arr.last()).to.equal(3);
+
+            arr = [...Array(10000).keys()];
+            expect(arr.last()).to.equal(9999);
+        });
+    });
+
+    describe('Calling last with predicate', function() {
+        it('Calling last with an invalid predicate causes the function to throw an exception', function() {
+            var arr = [1, 2, 3];
+
+            expect(() => arr.last(null)).to.throw('Invalid predicate.');
+            expect(() => arr.last(0)).to.throw('Invalid predicate.');
+            expect(() => arr.last(false)).to.throw('Invalid predicate.');
+            expect(() => arr.last(null)).to.throw('Invalid predicate.');
+            expect(() => arr.last('predicate')).to.throw('Invalid predicate.');
+            expect(() => arr.last([])).to.throw('Invalid predicate.');
+            expect(() => arr.last({})).to.throw('Invalid predicate.');
+        });
+
+        it('If no elements satisfy the predicate\'s condition, first throws an exception', function() {
+            var arr = [1, 2, 3];
+
+            expect(() => arr.last(x => x > 3)).to.throw('No elements satisfy the condition or the array is empty.');
+        });
+
+        it('last always returns the last element to satisfy the condition', function() {
+            var arr = [
+                {
+                    name: 'Clark',
+                    age: 22
+                },
+                {
+                    name: 'Bruce',
+                    age: 23
+                },
+                {
+                    name: 'Clark',
+                    age: 24
+                }
+            ];
+
+            expect(arr.last(x => x.name == 'Clark')).to.equal(arr[2]);
         });
     });
 });

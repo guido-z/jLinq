@@ -337,6 +337,35 @@ var jLinq = (function() {
 		return result.getElements();
 	}
 
+	/*
+	 * Returns the last element of a sequence. If a predicate is provided, it
+	 * returns the last element that satisfies the condition.
+	 *
+	 * @param {Function} predicate
+	 * @return {any}
+	 */
+	Array.prototype.last = function(predicate) {
+		if(!this.length) {
+			_throw('No elements satisfy the condition or the array is empty.');
+		}
+
+		else if(predicate === undefined) {
+			return this.slice(-1)[0];
+		}
+
+		else if(!isFunction(predicate)) {
+			_throw('Invalid predicate.');
+		}
+
+		for(var i = this.length - 1; i >= 0; i--) {
+			if(predicate(this[i])) {
+				return this[i];
+			}
+		}
+
+		_throw('No elements satisfy the condition or the array is empty.');
+	}
+
 	Array.prototype.lastOrDefault = function(predicate) {
 		if(predicate === undefined) {
 			if(this.length>0) return this[this.length-1];
