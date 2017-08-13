@@ -1219,6 +1219,36 @@ describe('min tests', function() {
     });
 });
 
+describe('reversed tests', function() {
+    it('Calling reversed on an empty array returns an empty array', function() {
+        var arr = [];
+
+        expect(arr.reversed()).to.deep.equal([]);
+    });
+
+    it('Calling reversed on a one element array returns an array with the only element', function() {
+        var arr = [1];
+
+        expect(arr.reversed()).to.deep.equal([1]);
+    });
+
+    it('reversed does not modify the original array, instead it returns a new array', function() {
+        var arr = [1, 2, 3];
+
+        expect(arr.reversed()).to.deep.equal([3, 2, 1]);
+        expect(arr.reversed()).to.not.equal(arr);
+    });
+
+    it('Other tests', function() {
+        var arr = ['r', 'e', 'v', 'e', 'r', 's', 'e', 'd'];
+        expect(arr.reversed()).to.deep.equal(['d', 'e', 's', 'r', 'e', 'v','e', 'r']);
+
+        var arr = [...Array(10000).keys()];
+        var expected = [...Array(10000).keys()].reverse();
+        expect(arr.reversed()).to.deep.equal(expected);
+    });
+});
+
 describe('select tests', function() {
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];

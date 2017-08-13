@@ -397,7 +397,7 @@ var jLinq = (function() {
 	 */
 	Array.prototype.max = function(selector) {
 		if(!this.length) {
-			throw new Error('The array is empty.');
+			_throw('The array is empty.');
 		}
 
 		else if(selector === undefined) {
@@ -405,7 +405,7 @@ var jLinq = (function() {
 		}
 
 		else if(!isFunction(selector)) {
-			throw new Error('Invalid selector.');
+			_throw('Invalid selector.');
 		}
 
 		return this.reduce((x, y) => selector(y) > x ? selector(y) : x, selector(this[0]));
@@ -420,7 +420,7 @@ var jLinq = (function() {
 	 */
 	Array.prototype.min = function(selector) {
 		if(!this.length) {
-			throw new Error('The array is empty.');
+			_throw('The array is empty.');
 		}
 
 		else if(selector === undefined) {
@@ -428,7 +428,7 @@ var jLinq = (function() {
 		}
 
 		else if(!isFunction(selector)) {
-			throw new Error('Invalid selector.');
+			_throw('Invalid selector.');
 		}
 
 		return this.reduce((x, y) => selector(y) < x ? selector(y) : x, selector(this[0]));
@@ -443,6 +443,15 @@ var jLinq = (function() {
 
         return result;
     };
+
+	/*
+	 * Inverts the order of the elements in a sequence.
+	 *
+	 * @return {Array}
+	 */
+	Array.prototype.reversed = function() {
+		return this.slice(0).reverse();
+	};
 
 	/*
 	 * Projects each element of a sequence into a new form.
