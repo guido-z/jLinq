@@ -411,6 +411,29 @@ var jLinq = (function() {
 		return this.reduce((x, y) => selector(y) > x ? selector(y) : x, selector(this[0]));
 	};
 
+	/*
+	 * Invokes a transform function, if provided, on each element of a
+	 * sequence and returns the minimum value.
+	 *
+	 * @param {Function} selector
+	 * @return {Number}
+	 */
+	Array.prototype.min = function(selector) {
+		if(!this.length) {
+			throw new Error('The array is empty.');
+		}
+
+		else if(selector === undefined) {
+			selector = x => x;
+		}
+
+		else if(!isFunction(selector)) {
+			throw new Error('Invalid selector.');
+		}
+
+		return this.reduce((x, y) => selector(y) < x ? selector(y) : x, selector(this[0]));
+	};
+
 	Array.prototype.remove = function(predicate) {
         let result = [];
         for(let i in this){

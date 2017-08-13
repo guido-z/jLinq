@@ -1146,6 +1146,79 @@ describe('max tests', function() {
     });
 });
 
+describe('min tests', function() {
+    describe('Calling min with no selector', function() {
+        it('Calling min on an empty array causes the function to throw an exception', function() {
+            var arr = [];
+
+            expect(() => arr.min()).to.throw('The array is empty.');
+        });
+
+        it('Calling min on a one element array returns the only element', function() {
+            var arr = [1];
+            expect(arr.min()).to.equal(1);
+
+            arr = [2.5];
+            expect(arr.min()).to.equal(2.5);
+        });
+
+        it('Calling min on an array where the minimum element is repeated', function() {
+            var arr = [3, 2, 1, 1];
+            expect(arr.min()).to.equal(1);
+
+            arr = [1, 1, 2, 3];
+            expect(arr.min()).to.equal(1);
+
+            arr = [1, 2, 3, 1];
+            expect(arr.min()).to.equal(1);
+        });
+
+        it('Calling min on an array where the elements are all the same', function() {
+            var arr = Array(10).fill(10);
+
+            expect(arr.min()).to.equal(10);
+        });
+    });
+
+    describe('Calling min with selector', function() {
+        it('Calling min on an empty array causes the function to throw an exception', function() {
+            var arr = [];
+
+            expect(() => arr.min(x => x)).to.throw('The array is empty.');
+        });
+
+        it('Calling min with an invalid selector causes the function to throw an exception', function() {
+            var arr = [1, 2, 3];
+
+            expect(() => arr.min(null)).to.throw('Invalid selector.');
+            expect(() => arr.min(0)).to.throw('Invalid selector.');
+            expect(() => arr.min(false)).to.throw('Invalid selector.');
+            expect(() => arr.min('selector')).to.throw('Invalid selector.');
+            expect(() => arr.min({})).to.throw('Invalid selector.');
+            expect(() => arr.min([])).to.throw('Invalid selector.');
+        });
+
+        it('Get the minimum age from a group of persons', function() {
+            var arr = [
+                {
+                    name: 'Clark',
+                    age: 22
+                },
+                {
+                    name: 'Bruce',
+                    age: 25
+                },
+                {
+                    name: 'Barry',
+                    age: 21
+                }
+            ];
+
+            expect(arr.min(x => x.age)).to.equal(21);
+        });
+    });
+});
+
 describe('select tests', function() {
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];
