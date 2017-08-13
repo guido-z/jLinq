@@ -1073,6 +1073,79 @@ describe('last tests', function() {
     });
 });
 
+describe('max tests', function() {
+    describe('Calling max with no selector', function() {
+        it('Calling max on an empty array causes the function to throw an exception', function() {
+            var arr = [];
+
+            expect(() => arr.max()).to.throw('The array is empty.');
+        });
+
+        it('Calling max on a one element array returns the only element', function() {
+            var arr = [1];
+            expect(arr.max()).to.equal(1);
+
+            arr = [2.5];
+            expect(arr.max()).to.equal(2.5);
+        });
+
+        it('Calling max on an array where the maximum element is repeated', function() {
+            var arr = [1, 2, 3, 3];
+            expect(arr.max()).to.equal(3);
+
+            arr = [3, 3, 1, 2];
+            expect(arr.max()).to.equal(3);
+
+            arr = [3, 1, 2, 3];
+            expect(arr.max()).to.equal(3);
+        });
+
+        it('Calling max on an array where the elements are all the same', function() {
+            var arr = Array(10).fill(10);
+
+            expect(arr.max()).to.equal(10);
+        });
+    });
+
+    describe('Calling max with selector', function() {
+        it('Calling max on an empty array causes the function to throw an exception', function() {
+            var arr = [];
+
+            expect(() => arr.max(x => x)).to.throw('The array is empty.');
+        });
+
+        it('Calling max with an invalid selector causes the function to throw an exception', function() {
+            var arr = [1, 2, 3];
+
+            expect(() => arr.max(null)).to.throw('Invalid selector.');
+            expect(() => arr.max(0)).to.throw('Invalid selector.');
+            expect(() => arr.max(false)).to.throw('Invalid selector.');
+            expect(() => arr.max('selector')).to.throw('Invalid selector.');
+            expect(() => arr.max({})).to.throw('Invalid selector.');
+            expect(() => arr.max([])).to.throw('Invalid selector.');
+        });
+
+        it('Get the maximum age from a group of persons', function() {
+            var arr = [
+                {
+                    name: 'Clark',
+                    age: 22
+                },
+                {
+                    name: 'Bruce',
+                    age: 25
+                },
+                {
+                    name: 'Barry',
+                    age: 21
+                }
+            ];
+
+            expect(arr.max(x => x.age)).to.equal(25);
+        });
+    });
+});
+
 describe('select tests', function() {
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];

@@ -86,7 +86,7 @@ var jLinq = (function() {
 	Array.prototype.average = function(selector) {
 		try {
 			return this.length ?
-				[0].concat(this).reduce((x, y) => x + selector(y)) / this.length
+				this.reduce((x, y) => x + selector(y), 0) / this.length
 				: _throw('The array is empty.');
 		}
 		catch(err) {
@@ -364,7 +364,7 @@ var jLinq = (function() {
 		}
 
 		_throw('No elements satisfy the condition or the array is empty.');
-	}
+	};
 
 	Array.prototype.lastOrDefault = function(predicate) {
 		if(predicate === undefined) {
@@ -386,6 +386,29 @@ var jLinq = (function() {
 		}
 
 		return null;
+	};
+
+	/*
+	 * Invokes a transform function, if provided, on each element of a
+	 * sequence and returns the maximum value.
+	 *
+	 * @param {Function} selector
+	 * @return {Number}
+	 */
+	Array.prototype.max = function(selector) {
+		if(!this.length) {
+			throw new Error('The array is empty.');
+		}
+
+		else if(selector === undefined) {
+			selector = x => x;
+		}
+
+		else if(!isFunction(selector)) {
+			throw new Error('Invalid selector.');
+		}
+
+		return this.reduce((x, y) => selector(y) > x ? selector(y) : x, selector(this[0]));
 	};
 
 	Array.prototype.remove = function(predicate) {
