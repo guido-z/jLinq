@@ -1219,6 +1219,55 @@ describe('min tests', function() {
     });
 });
 
+describe('range tests', function() {
+    it('If \'start\' parameter is not a number, range throws an exception', function(){
+
+        expect(() => l.range(undefined, 1)).to.throw('Expected a number.');
+        expect(() => l.range(null, 1)).to.throw('Expected a number.');
+        expect(() => l.range(1.1, 1)).to.throw('Expected a number.');
+        expect(() => l.range(true, 1)).to.throw('Expected a number.');
+        expect(() => l.range('start', 1)).to.throw('Expected a number.');
+        expect(() => l.range({}, 1)).to.throw('Expected a number.');
+        expect(() => l.range([], 1)).to.throw('Expected a number.');
+    });
+
+    it('If \'count\' parameter is not a number, range throws an exception', function() {
+        expect(() => l.range(1, undefined)).to.throw('Expected a number.');
+        expect(() => l.range(1, null)).to.throw('Expected a number.');
+        expect(() => l.range(1, 1.1)).to.throw('Expected a number.');
+        expect(() => l.range(1, true)).to.throw('Expected a number.');
+        expect(() => l.range(1, 'start')).to.throw('Expected a number.');
+        expect(() => l.range(1, {})).to.throw('Expected a number.');
+        expect(() => l.range(1, [])).to.throw('Expected a number.');
+    });
+
+    it('If \'count\' parameter is negative, range throws an exception', function() {
+        expect(() => l.range(1, -1)).to.throw('\'count\' is out of range.');
+    });
+
+    it('If \'count\' parameter is zero, range returns an empty array', function() {
+        expect(l.range(1, 0)).to.deep.equal([]);
+    });
+
+    it('Other tests', function() {
+        var result = l.range(1, 1);
+        var expected = [1];
+        expect(result).to.deep.equal(expected);
+
+        result = l.range(1, 5);
+        expected = [1, 2, 3, 4, 5];
+        expect(result).to.deep.equal(expected);
+
+        result = l.range(3, 10);
+        expected = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        expect(result).to.deep.equal(expected);
+
+        result = l.range(0, 9999);
+        expected = [...Array(9999).keys()];
+        expect(result).to.deep.equal(expected);
+    });
+});
+
 describe('reversed tests', function() {
     it('Calling reversed on an empty array returns an empty array', function() {
         var arr = [];

@@ -38,6 +38,10 @@ var jLinq = (function() {
 		return Object.prototype.toString.call(array) == '[object Array]';
 	};
 
+	var isInteger = function(value) {
+		return parseInt(value) === value;
+	};
+
 	var isFunction = function(func) {
 		return Object.prototype.toString.call(func) == '[object Function]';
 	};
@@ -210,7 +214,7 @@ var jLinq = (function() {
 	 * @return {any}
 	 */
 	Array.prototype.elementAt = function(index) {
-		if(index !== parseInt(index)) {
+		if(!isInteger(index)) {
 			_throw('Expected an integer.');
 		}
 
@@ -492,4 +496,27 @@ var jLinq = (function() {
 
 		return this.filter(predicate);
 	};
+
+	return {
+	   /*
+		* Generates a sequence of integral numbers within a specified range.
+		*
+		* @param {Number} start
+		* @param {Number} count
+		* @return {Array}
+		*/
+		range: function(start, count) {
+			if(!isInteger(start) || !isInteger(count)) {
+				_throw('Expected a number.');
+			}
+
+			else if(count < 0) {
+				_throw('\'count\' is out of range.');
+			}
+
+			return [...Array(count).keys()].map(x => x + start);
+		}
+	};
 }());
+
+var l = jLinq;
