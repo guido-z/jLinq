@@ -464,7 +464,11 @@ var jLinq = (function() {
 	 * @return {Object} select
 	 */
 	Array.prototype.select = function(selector) {
-		return this.map(selector);		
+		if(!selector || !isFunction(selector)) {
+			_throw('Invalid selector.');
+		}
+
+		return this.map(selector);
 	};
 
 	Array.prototype.selectMany = function(predicate) {
@@ -478,26 +482,60 @@ var jLinq = (function() {
     };
 
 	/*
+	 * Returns the only element of a sequence, and throws an exception if there
+	 * is not exactly one element in the sequence. If a predicate is provided,
+	 * it returns the first element that satisfies the condition, or throws an
+	 * exception if no such element exists.
+	 *
+	 * @param {Function} predicate
+	 * @return {Any}
+	 */
+	Array.prototype.single = function(predicate) {
+		if(this.length == 0) {
+			_throw('The array is empty.');
+		}
+
+		else if(predicate === undefined) {
+			if(this.length > 1) {
+				_throw('The array has more than one element.');
+			}
+
+			return this[0];
+		}
+
+		else if(!isFunction(predicate)) {
+			_throw('Invalid predicate.');
+		}
+
+		var result = this.filter(predicate);
+
+		if(result.length == 0) {
+			_throw('No elements satisfy the condition.');
+		}
+
+		else if(result.length > 1) {
+			_throw('Sequence contains more than one matching element.');
+		}
+
+		return result[0];
+	};
+
+	/*
 	 * Returns an object list that represents the value in the predicate
 	 *
 	 * @param {Function} predicate
 	 * @return {Object} object list
 	 */
 	Array.prototype.where = function(predicate) {
-		if(predicate === undefined) {
-			return this.length;
-		}
-
-		else if(predicate !== undefined) {
-			if(Object.prototype.toString.call(predicate) != '[object Function]') {
-				throw new Error('Invalid predicate.');
-			}
+		if(!predicate || !isFunction(predicate)) {
+			_throw('Invalid predicate.')
 		}
 
 		return this.filter(predicate);
 	};
 
 	return {
+
 	   /*
 		* Generates a sequence of integral numbers within a specified range.
 		*
@@ -515,6 +553,21 @@ var jLinq = (function() {
 			}
 
 			return [...Array(count).keys()].map(x => x + start);
+		},
+
+		/*
+		 * Generates a sequence that contains one repeated value.
+		 *
+		 * @param {Any} element
+		 * @param {Number} count
+		 * @return {Array}
+		 */
+		repeat: function(element, count) {
+			if(!isInteger(count) || count < 0) {
+				_throw('count must be a non negative integer.');
+			}
+
+			return new Array(count).fill(element);
 		}
 	};
 }());

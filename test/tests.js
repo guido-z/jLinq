@@ -11,6 +11,12 @@ describe('all tests', function() {
         expect(() => arr.all(undefined)).to.throw('Invalid predicate.');
     });
 
+    it('Calling all on an empty array returns true', function() {
+        var arr = [];
+
+        expect(arr.all(x => x === 0 && x !== 0)).to.equal(true);
+    });
+
     it('Search for true in an array of true values returns true', function() {
         var arr = [true, true, true];
         var result = arr.all(x => x === true);
@@ -79,7 +85,7 @@ describe('all tests', function() {
 });
 
 describe('any tests', function() {
-    describe('Parameterless overload', function() {
+    describe('Calling any with no predicate', function() {
         it('Applying any on empty array returns false', function() {
             var arr = new Array();
             expect(arr.any()).to.equal(false);
@@ -101,7 +107,18 @@ describe('any tests', function() {
         });
     });
 
-    describe('Predicate overload', function() {
+    describe('Calling any with predicate', function() {
+        it('Calling any with an invalid predicate causes the function to throw an exception', function() {
+            var arr = [1, 2, 3];
+
+            expect(() => arr.any(null)).to.throw('Invalid predicate.');
+            expect(() => arr.any(0)).to.throw('Invalid predicate.');
+            expect(() => arr.any('predicate')).to.throw('Invalid predicate.');
+            expect(() => arr.any(false)).to.throw('Invalid predicate.');
+            expect(() => arr.any({})).to.throw('Invalid predicate.');
+            expect(() => arr.any([])).to.throw('Invalid predicate.');
+        });
+
         it('Applying any to search for even numbers in an array filled with even numbers returns true', function() {
             var arr = [2, 4, 6, 8, 10];
             expect(arr.any(x => x % 2 == 0)).to.equal(true);
@@ -142,6 +159,7 @@ describe('average tests', function() {
         expect(() => arr.average()).to.throw('Invalid selector.');
         expect(() => arr.average(null)).to.throw('Invalid selector.');
         expect(() => arr.average(1)).to.throw('Invalid selector.');
+        expect(() => arr.average(false)).to.throw('Invalid selector.');
         expect(() => arr.average('selector')).to.throw('Invalid selector.');
         expect(() => arr.average({})).to.throw('Invalid selector.');
         expect(() => arr.average([])).to.throw('Invalid selector.');
@@ -149,8 +167,14 @@ describe('average tests', function() {
 
     it('Calling average with an empty array causes the function to throw an exception', function() {
         var arr = [];
-        
+
         expect(() => arr.average(x => x)).to.throw('The array is empty.');
+    });
+
+    it('Calling average on an array with only one element returns the element', function() {
+        var arr = [1];
+
+        expect(arr.average(x => x)).to.equal(1);
     });
 
     it('Calculate the average of integers', function() {
@@ -336,6 +360,12 @@ describe('count tests', function() {
         it('Calling count on a two element array returns 2', function() {
             var arr = [1, 2];
             expect(arr.count()).to.equal(2);
+        });
+
+        it('Volume test', function() {
+            var arr = [...Array(10000).keys()];
+
+            expect(arr.count()).to.equal(10000);
         });
     });
 
@@ -1268,6 +1298,68 @@ describe('range tests', function() {
     });
 });
 
+describe('repeat tests', function() {
+    it('If count is missing, the function throws an exception', function(){
+        expect(() => l.repeat(1)).to.throw('count must be a non negative integer.');
+    });
+
+    it('If count is not an integer, the function throws an exception', function() {
+        expect(() => l.repeat(1, undefined)).to.throw('count must be a non negative integer.');
+        expect(() => l.repeat(1, null)).to.throw('count must be a non negative integer.');
+        expect(() => l.repeat(1, 1.5)).to.throw('count must be a non negative integer.');
+        expect(() => l.repeat(1, false)).to.throw('count must be a non negative integer.');
+        expect(() => l.repeat(1, 'count')).to.throw('count must be a non negative integer.');
+        expect(() => l.repeat(1, {})).to.throw('count must be a non negative integer.');
+        expect(() => l.repeat(1, [])).to.throw('count must be a non negative integer.');
+    });
+
+    it('If count is negative, the function throws an exception', function() {
+        expect(() => l.repeat(1, -1)).to.throw('count must be a non negative integer.');
+    });
+
+    it('If count is zero, the function returns an empty array', function() {
+        var result = l.repeat(1, 0);
+        expect(result).to.deep.equal([]);
+
+        result = l.repeat(2.5, 0);
+        expect(result).to.deep.equal([]);
+
+        result = l.repeat(true, 0);
+        expect(result).to.deep.equal([]);
+
+        result = l.repeat('repeat', 0);
+        expect(result).to.deep.equal([]);
+
+        result = l.repeat({}, 0);
+        expect(result).to.deep.equal([]);
+
+        result = l.repeat([], 0);
+        expect(result).to.deep.equal([]);
+    });
+
+    it('Repeat puts the same object in every position of the resulting array', function() {
+        var obj = { name: 'Clark Kent' };
+        var result = l.repeat(obj, 3);
+        var sameLength = result.filter(x => x == obj).length;
+
+        expect(sameLength).to.equal(3);
+    });
+
+    it('Other tests', function() {
+        var result = l.repeat(1, 3);
+        var expected = [1, 1, 1];
+        expect(result).to.deep.equal(expected);
+
+        result = l.repeat(2.5, 5);
+        expected = [2.5, 2.5, 2.5, 2.5, 2.5];
+        expect(result).to.deep.equal(expected);
+
+        result = l.repeat('repeat', 8);
+        expected = ['repeat', 'repeat', 'repeat', 'repeat', 'repeat', 'repeat', 'repeat', 'repeat'];
+        expect(result).to.deep.equal(expected);
+    });
+});
+
 describe('reversed tests', function() {
     it('Calling reversed on an empty array returns an empty array', function() {
         var arr = [];
@@ -1299,6 +1391,25 @@ describe('reversed tests', function() {
 });
 
 describe('select tests', function() {
+    it('Calling select with an invalid selector causes the function to throw an exception', function() {
+        var arr = [1, 2, 3];
+
+        expect(() => arr.select()).to.throw('Invalid selector.');
+        expect(() => arr.select(null)).to.throw('Invalid selector.');
+        expect(() => arr.select(0)).to.throw('Invalid selector.');
+        expect(() => arr.select(false)).to.throw('Invalid selector.');
+        expect(() => arr.select('selector')).to.throw('Invalid selector.');
+        expect(() => arr.select({})).to.throw('Invalid selector.');
+        expect(() => arr.select([])).to.throw('Invalid selector.');
+    });
+
+    it('Calling select on an empty array returns another empty array', function() {
+        var arr = [];
+
+        expect(arr.select(x => x)).to.not.equal(arr);
+        expect(arr.select(x => x)).to.deep.equal(arr);
+    });
+
     it('Return same elements in selector produces a clone of the original array', function() {
         var arr = [1, 2, 3];
         var result = arr.select(x => x);
@@ -1359,6 +1470,100 @@ describe('select tests', function() {
         var resultB = arr.select(x => (x * 2) + 1);
 
         expect(resultA).to.deep.equal(resultB);
+    });
+});
+
+describe('single tests', function() {
+    describe('Calling single with no predicate', function() {
+        it('If the array is empty, single throws an exception', function() {
+            var arr = [];
+            var expected = 'The array is empty.';
+
+            expect(() => arr.single()).to.throw(expected);
+        });
+
+        it('If the array contains more than one element, single throws an exception', function() {
+            var arr = [1, 2];
+            var expected = 'The array has more than one element.';
+
+            expect(() => arr.single()).to.throw(expected);
+        });
+
+        it('If the array contains exactly one element, single returns it', function() {
+            var arr = [1];
+            var result = arr.single();
+            var expected = 1;
+            expect(result).to.equal(expected);
+
+            arr = [2.5];
+            result = arr.single();
+            expected = 2.5;
+            expect(result).to.equal(expected);
+
+            arr = ['one'];
+            result = arr.single();
+            expected = 'one';
+            expect(result).to.equal(expected);
+
+            arr = [{ name: 'Clark Kent' }];
+            result = arr.single();
+            expected = arr[0];
+            expect(result).to.equal(expected);
+        });
+    });
+
+    describe('Calling single with predicate', function() {
+        it('Calling single with an invalid predicate causes the function to throw an exception', function() {
+            var arr = [1];
+            var expected = 'Invalid predicate.';
+
+            expect(() => arr.single(null)).to.throw(expected);
+            expect(() => arr.single(0)).to.throw(expected);
+            expect(() => arr.single(false)).to.throw(expected);
+            expect(() => arr.single('predicate')).to.throw(expected);
+            expect(() => arr.single({})).to.throw(expected);
+            expect(() => arr.single([])).to.throw(expected);
+        });
+
+        it('Calling single on an empty array causes the function to throw an exception', function() {
+            var arr = [];
+            var expected = 'The array is empty';
+
+            expect(() => arr.single(x => x != 0)).to.throw(expected);
+        });
+
+        it('If no elements satisfy the condition, single throws an exception', function() {
+            var arr = ['a'];
+            var expected = 'No elements satisfy the condition.';
+            expect(() => arr.single(x => x == 'z')).to.throw(expected);
+
+            arr = [1, 2, 3];
+            expect(() => arr.single(x => x > 3)).to.throw(expected);
+        });
+
+        it('If more than one element satisfy the condition, single throws an exception', function() {
+            var arr = [1, 4, 2, 3, 5];
+            var expected = 'Sequence contains more than one matching element.';
+
+            expect(() => arr.single(x => x > 3)).to.throw(expected);
+        });
+
+        it('Other tests', function() {
+            var arr = [1, 2, 3];
+            var result  = arr.single(x => x == 3);
+            var expected = 3;
+            expect(result).to.equal(expected);
+
+            arr = [
+                { name: 'Clark', age: 32 },
+                { name: 'Bruce', age: 25 },
+                { name: 'Barry', age: 27 }
+            ];
+
+            result = arr.single(x => x.age > 30);
+            expected = arr[0];
+            expect(result).to.equal(expected);
+        });
     });
 });
 
